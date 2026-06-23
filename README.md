@@ -1,4 +1,4 @@
-# Acebook
+# Definitely not Stolen From Acebook
 
 The application uses:
   - `maven` to build the project
