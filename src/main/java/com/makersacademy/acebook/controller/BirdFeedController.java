@@ -17,6 +17,7 @@ public class BirdFeedController {
     public ModelAndView index() {
         ModelAndView birdFeed = new ModelAndView("/birdfeed");
         Iterable<Post> listOfPosts = postRepository.findAll();
+        birdFeed.addObject("listOfPosts", listOfPosts);
         return birdFeed;
     }
 }

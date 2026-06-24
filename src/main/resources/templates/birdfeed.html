@@ -10,9 +10,13 @@
 
     <h1>🦩 I Like Birds 🦩</h1>
 
+
+
     <div sec:authorize="isAuthenticated()" id="greeting">
         Signed in as <span sec:authentication="principal.attributes['email']"></span>
     </div>
+
+    <p th:each="post: ${listOfPosts}" th:text="${post.getContent()}"></p>
 
     </body>
 </html>
