@@ -9,8 +9,6 @@ import lombok.Setter;
 @Data
 @Entity
 @Table(name="USERS")
-@Getter
-@Setter
 @NoArgsConstructor
 
 public class User {
@@ -22,3 +20,4 @@ public class User {
     private String email;
     private boolean enabled;
 }
+

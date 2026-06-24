@@ -1,7 +1,6 @@
 package com.makersacademy.acebook.controller;
 
 
-import ch.qos.logback.core.model.Model;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +16,7 @@ public class UsersController {
                 .getAuthentication()
                 .getPrincipal();
 
-        ModelAndView afterLogin = new ModelAndView("/index");
+        ModelAndView afterLogin = new ModelAndView("/birdfeed");
 
         return afterLogin;
     }
