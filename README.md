@@ -19,8 +19,8 @@ Below, you'll find specific learning objectives for each tool.
   to open the Settings and go to Plugins and search for Lombok made by Jetbrains and install).
 - Create two new Postgres databases called `bird_beacon_dev` and `bird_beacon_test`
 - Install Maven `brew install maven`
-- Build the app and start the server, using the Maven command `mvn spring-boot:run`
 - [Set up Auth0](https://journey.makers.tech/pages/auth0) (you only need the "Create an Auth0 app" section)
+- Build the app and start the server, using the Maven command `mvn spring-boot:run`
 > The database migrations will run automatically at this point
 - Visit `http://localhost:8081/` to sign up
 
