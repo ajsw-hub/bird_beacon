@@ -10,6 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.Optional;
 
@@ -19,7 +20,7 @@ public class UsersController {
     userRepository userRepository;
 
     @GetMapping("/users/after-login")
-    public ModelAndView afterLogin(HttpSession session) {
+    public RedirectView afterLogin(HttpSession session) {
         DefaultOidcUser principal = (DefaultOidcUser) SecurityContextHolder
                 .getContext()
                 .getAuthentication()
@@ -32,8 +33,7 @@ public class UsersController {
         Optional<User> findingUser = userRepository.findUserByUsername(username);
         User currentUser = findingUser.get();
         session.setAttribute("currentUser", currentUser);
-        ModelAndView afterLogin = new ModelAndView("index");
-
-        return afterLogin;
+      
+        return new RedirectView("/");
     }
 }

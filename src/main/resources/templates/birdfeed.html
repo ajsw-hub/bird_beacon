@@ -10,9 +10,16 @@
 
     <h1>🦩 I Like Birds 🦩</h1>
 
+    <form action = "#" th:action="@{/new_sighting}" th:object="${post}" method = "post" >
+       <input type="text" th:field="*{content}"/>
+        <input type="submit">
+    </form>
+
     <div sec:authorize="isAuthenticated()" id="greeting">
         Signed in as <span sec:authentication="principal.attributes['email']"></span>
     </div>
+
+    <p th:each="post: ${listOfPosts}" th:text="${post.getContent()}"></p>
 
     </body>
 </html>
