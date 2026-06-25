@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+    <html xmlns:th="http://www.thymeleaf.org"
+          xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5" >
+    <head lang="en">
+        <meta charset="UTF-8"/>
+        <title>Birdfeed</title>
+        <link rel="stylesheet" href="/main.css" />
+    </head>
+    <body>
+    <a href="/logout">Logout</a>
+    <a href="/birdfeed">Bird Feed</a>
+    <a href="/profile">Profile</a>
+    <h1>🦩 I Like Birds - Birdfeed 🦩</h1>
+
+    <form action = "#" th:action="@{/new_sighting}" th:object="${post}" method = "post" >
+       <input type="text" th:field="*{content}" minlength = "3" required/>
+        <input type="submit">
+    </form>
+
+    <div sec:authorize="isAuthenticated()" id="greeting">
+        Signed in as <span sec:authentication="principal.attributes['email']"></span>
+    </div>
+
+    <p th:each="post: ${listOfPosts}" th:text="${post.getContent()}"></p>
+
+    </body>
+</html>
