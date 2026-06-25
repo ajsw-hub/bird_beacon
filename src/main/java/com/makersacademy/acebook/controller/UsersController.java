@@ -38,6 +38,6 @@ public class UsersController {
         session.setAttribute("username", username);
 
 
-        return new RedirectView("/");
+        return new RedirectView("/birdfeed");
     }
 }
