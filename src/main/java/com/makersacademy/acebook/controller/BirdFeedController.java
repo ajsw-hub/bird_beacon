@@ -17,7 +17,7 @@ public class BirdFeedController {
     @GetMapping("/birdfeed")
     public ModelAndView index() {
         ModelAndView birdFeed = new ModelAndView("/birdfeed");
-        Iterable<Post> listOfPosts = postRepository.findAll();
+        List<Post> listOfPosts = postRepository.findAllOrderByIdDesc();
         birdFeed.addObject("listOfPosts", listOfPosts);
         birdFeed.addObject("post", new Post());
         return birdFeed;
