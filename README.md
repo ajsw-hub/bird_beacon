@@ -19,8 +19,23 @@ Below, you'll find specific learning objectives for each tool.
   to open the Settings and go to Plugins and search for Lombok made by Jetbrains and install).
 - Create two new Postgres databases called `bird_beacon_dev` and `bird_beacon_test`
 - Install Maven `brew install maven`
-- Build the app and start the server, using the Maven command `mvn spring-boot:run`
 - [Set up Auth0](https://journey.makers.tech/pages/auth0) (you only need the "Create an Auth0 app" section)
+- In your Auth0 account, set up username required by: navigation bar on left > Authentication > Database > clickon "Username-Password-Authentication" > Toggle on Requires Username in settings > Save.
+- To capture the username in your database, you will need to set up an action in your Auth0 accoiunt:
+Navigation bar left > Actions > Triggers > post-login > On the right side of the screen, next to add action click '+' > create custom action > Name: add username to token > Create > On the next screen on the code box replace the existing code with the following: 
+```
+exports.onExecutePostLogin = async (event, api) => {
+
+  const username = event.user.username || event.user.nickname;
+  api.idToken.setCustomClaim(
+    "https://birdbeacon.com/username",
+    username
+  );
+};
+```
+Click Deploy > Back to triggers on the left of the screen > drag the new action you just created on the panel on the right and place it in between 'Start user logged in' and 'Token Issued' > click Apply > Finished 
+
+- Build the app and start the server, using the Maven command `mvn spring-boot:run`
 > The database migrations will run automatically at this point
 - Visit `http://localhost:8081/` to sign up
 
