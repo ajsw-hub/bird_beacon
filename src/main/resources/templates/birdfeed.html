@@ -5,6 +5,19 @@
         <meta charset="UTF-8"/>
         <title>Birdfeed</title>
         <link rel="stylesheet" href="/main.css" />
+
+<!--        CSS for mini map can be moved to css file needed it here for build-->
+        <style>
+            .mini-map {
+                height: 100px;
+                width: 500px;
+                transition: all 0.3s ease;
+            }
+            .mini-map.expanded {
+                height: 300px;
+                width: 500px;
+            }
+        </style>
     </head>
     <body>
     <a href="/logout">Logout</a>
@@ -25,7 +38,7 @@
         <input type="hidden" th:field="*{latitude}" id="lat"/><br/>
         <input type="hidden" th:field="*{longitude}" id="lng"/><br/>
         <!--        this is where the moa shows-->
-        <div id="map" style="height: 300px; width: 550px; margin-bottom: 10px;"></div>
+        <div id="map" style="height: 300px; width: 500px; margin-bottom: 10px;"></div>
         <p>Click on the map to set location 📍</p>
         <!--        this is where the moa shows-->
         <label>Use your own picture<input class="user-img" type="file" name="user_bird"/></label><br/>
@@ -40,14 +53,16 @@
 
     <div class="posts-on-birdfeed" th:each="post: ${listOfPosts}">
         <p th:text="${post.getBird_name()}"></p>
-        <img th:src="@{'/postimg/' + ${post.getUser_img()}}" width="300"/>
+        <img th:src="@{'/postimg/' + ${post.getUser_img()}}" width="500" height="500" />
         <p th:text="${post.getContent()}"></p>
 <!--        This is the old latitude and longitude being replaced with map, -->
 <!--        <p th:text="${post.getLatitude()} + ' ' + ${post.getLongitude()}"></p>-->
 <!--        The map not interactive-->
-        <div class="post-map"
+        <div class="mini-map"
+             th:if="${post.latitude != null and post.longitude != null}"
              th:attr="data-lat=${post.latitude}, data-lng=${post.longitude}">
         </div>
+    </div>
 
 
 
@@ -57,8 +72,9 @@
 <!--    this i believe is the java scrip making the map happen dont fully get js yet-->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <!--    Okay this below is the map logic where click sets the lat and lng numbers in our form which is hidden-->
-    <script>
 
+<!--    This is java script for the post map when creating post.-->
+    <script>
     // 1. Create map (this links to your <div id="map">)
         const map = L.map('map').setView([51.505, -0.09], 13);
         // 2. Add OpenStreetMap tiles (this is the actual map visuals)
@@ -82,5 +98,33 @@
         }
         });
         </script>
+
+<!--This is the JS for the little maps in the actual post -->
+    <script>
+        document.querySelectorAll(".mini-map").forEach(function(el) {
+            const lat = parseFloat(el.dataset.lat);
+            const lng = parseFloat(el.dataset.lng);
+            const miniMap = L.map(el, {
+                zoomControl: false,
+                scrollWheelZoom: false,
+                dragging: false,
+                doubleClickZoom: false,
+                boxZoom: false
+            }).setView([lat, lng], 13);
+            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19
+            }).addTo(miniMap);
+            L.marker([lat, lng]).addTo(miniMap);
+
+            // click = expand
+            el.addEventListener("click", function () {
+                el.classList.toggle("expanded");
+                setTimeout(() => {
+                    miniMap.invalidateSize();
+                }, 200);
+            });
+        });
+
+    </script>
     </body>
 </html>
