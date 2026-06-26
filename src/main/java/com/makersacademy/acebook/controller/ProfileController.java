@@ -43,6 +43,7 @@ public class ProfileController {
 
         modelAndView.addObject("userPosts", userPosts);
         modelAndView.addObject("user", user);
+        modelAndView.addObject("post", new Post());
 
 
         return modelAndView;

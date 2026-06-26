@@ -19,11 +19,14 @@
          class="user-img"
          alt="Nav Profile Picture" />
 
+        <form action="#" th:action="@{/new_sighting}" th:object="${post}" method="post" >
+            <input type="text" th:field="*{content}" minlength = "3" required/>
+            <input type="submit">
+        </form>
+
         <h3>Post History</h3>
 
         <p th:each="post: ${userPosts}" th:text="${post.getContent()}"></p>
-
-
 
     </body>
 
