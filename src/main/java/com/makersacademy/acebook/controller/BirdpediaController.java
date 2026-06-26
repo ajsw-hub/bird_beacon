@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 
 import javax.swing.text.html.Option;
 import java.util.List;
@@ -32,6 +33,11 @@ public class BirdpediaController {
 
         return birdpedia;
 
+    }
+
+    @GetMapping("/birdpedia/")
+    public RedirectView birdpedia(){
+        return new RedirectView("/birdpedia");
     }
 
     @GetMapping("/birdpedia/{birdId}")

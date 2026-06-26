@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title th:text = "${birdId}"></title>
+        <title th:text = "${chosenBird.getName()}"></title>
     </head>
     <body>
     <a href="/logout">Logout</a>
@@ -15,10 +15,11 @@
     <p th:text = "'Family: ' + ${chosenBird.getFamily()}"></p>
     <p th:text = "'Order: ' + ${chosenBird.getBirdorder()}"></p>
     <p th:text = "'Satus:  ' + ${chosenBird.getStatus()}"></p>
-    <p th:text = "'Minimum Length: ' + ${chosenBird.getLengthmin()} + ' cm'"></p>
-    <p th:text = "'Maximum Length: ' + ${chosenBird.getLengthmax()} + ' cm'"></p>
-    <p th:text = "'Minimum Wingspan: ' + ${chosenBird.getWingspanmin()} + ' cm'"></p>
-    <p th:text = "'Maximum Wingspan: ' + ${chosenBird.getWingspanmax()} + ' cm'"></p>
+    <p th:text = "${chosenBird.getLengthmin()}  ? 'Minimum Length: '+${chosenBird.getLengthmin()}+' cm' : 'Minimum Length: No data available'"></p>
+    <p th:text = "${chosenBird.getLengthmax()}  ? 'Maximum Length: '+${chosenBird.getLengthmax()}+' cm' : 'Maximum Length: No data available'"></p>
+    <p th:text = "${chosenBird.getWingspanmin()}  ? 'Minimum Wingspan: '+${chosenBird.getWingspanmin()}+' cm' : 'Minimum Wingspan: No data available'"></p>
+    <p th:text = "${chosenBird.getWingspanmin()}  ? 'Maximum Wingspan: '+${chosenBird.getWingspanmin()}+' cm' : 'Maximum Wingspan: No data available'"></p>
+
     <p th:text = "'Rarity: ' + ${birdRarity}"></p>
 
 
