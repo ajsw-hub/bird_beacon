@@ -27,16 +27,23 @@ public class ProfileController {
     @GetMapping("/profile")
     public ModelAndView showMyPostHistory(HttpSession session){
 
+        System.out.println("SESSION: " + session);
+
         String username = session.getAttribute("username").toString();
 
-        Optional<User> findingUser = userRepository.findUserByUsername(username);
-        User currentUser = findingUser.get();
+//        Optional<User> findingUser = userRepository.findUserByUsername(username);
+        User user = userRepository.findUserByUsername(username).get();
 
-        List<Post> userPosts = postRepository.findByPosteridOrderByIdDesc(currentUser.getId());
+//        User currentUser = user.get();
+        System.out.println("currentUser: " + user);
+
+        List<Post> userPosts = postRepository.findByPosteridOrderByIdDesc(user.getId());
 
         ModelAndView modelAndView = new ModelAndView("/profile");
 
         modelAndView.addObject("userPosts", userPosts);
+        modelAndView.addObject("user", user);
+
 
         return modelAndView;
 

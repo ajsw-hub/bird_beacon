@@ -15,6 +15,14 @@
         <h1>Post History</h1>
 
         <p th:each="post: ${userPosts}" th:text="${post.getContent()}"></p>
+        <p>User details:</p>
+        <p th:text="${user}"></p>
+        <img th:src="@{/images/default-profile-pic.jpg}"
+         class="user-img"
+         alt="Nav Profile Picture" />
+        <img th:src="@{'/images/' + ${user.profilepicture}}"
+         class="user-img"
+         alt="Nav Profile Picture" />
 
     </body>
 
