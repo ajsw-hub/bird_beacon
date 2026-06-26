@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5" >
+    <head>
+        <meta charset="UTF-8">
+        <title>Birdpedia</title>
+    </head>
+
+    <body>
+        <h1 class="page_title">Birdpedia</h1>
+
+        <ul>
+<!--            <li th:each = "bird : ${allBirds}" th:text = "${bird.getName()}"></li>-->
+            <li th:each = "bird : ${allBirds}">
+                <a th:href="@{/{birdId}(birdId = ${bird.getId()})}">
+                    <p th:text = "${bird.getName()}"></p>
+                </a>
+            </li>
+<!--            <li th:each = "bird : ${allBirds}" th:text = "asdads"></li>-->
+        </ul>
+
+    </body>
+</html>
