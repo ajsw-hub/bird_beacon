@@ -26,5 +26,12 @@ public class BirdFeedController {
     public RedirectView birdfeed() {
         return new RedirectView("/birdfeed");
     }
+
+    @GetMapping("/map")
+    public ModelAndView map() {
+        ModelAndView map = new ModelAndView("maptest");
+        return map;
+
+    }
 }
 

@@ -12,16 +12,75 @@
     <a href="/profile">Profile</a>
     <h1>🦩 I Like Birds - Birdfeed 🦩</h1>
 
-    <form action = "#" th:action="@{/new_sighting}" th:object="${post}" method = "post" >
-       <input type="text" th:field="*{content}" minlength = "3" required/>
-        <input type="submit">
-    </form>
+    <div class="post-form">
+    <form action = "#" th:action="@{/new_sighting}" th:object="${post}" method = "post" enctype="multipart/form-data">
+        <label>Bird Name<input type="text" th:field="*{bird_name}" minlength="3" required/></label><br/>
+        <label>Content<input type="text" th:field="*{content}" minlength = "3" required placeholder="Your space to share your thoughts"/></label><br/>
 
+        <!--The below is the latitude and longitude text boxes comented out incase need a revert -->
+        <!--        <label>Latitude<input type="text" th:field="*{latitude}"/></label><br/>-->
+        <!--        <label>Longitude<input type="text" th:field="*{longitude}"/></label><br/>-->
+        <!-- this is the new hidden longitude and latitude fields which will be uodated by the map-->
+
+        <input type="hidden" th:field="*{latitude}" id="lat"/><br/>
+        <input type="hidden" th:field="*{longitude}" id="lng"/><br/>
+        <!--        this is where the moa shows-->
+        <div id="map" style="height: 300px; width: 550px; margin-bottom: 10px;"></div>
+        <p>Click on the map to set location 📍</p>
+        <!--        this is where the moa shows-->
+        <label>Use your own picture<input class="user-img" type="file" name="user_bird"/></label><br/>
+        <input type="submit">
+        <input type="reset" value="Reset"/>
+
+    </form>
+    </div>
     <div sec:authorize="isAuthenticated()" id="greeting">
         Signed in as <span sec:authentication="principal.attributes['email']"></span>
     </div>
 
-    <p th:each="post: ${listOfPosts}" th:text="${post.getContent()}"></p>
+    <div class="posts-on-birdfeed" th:each="post: ${listOfPosts}">
+        <p th:text="${post.getBird_name()}"></p>
+        <img th:src="@{'/postimg/' + ${post.getUser_img()}}" width="300"/>
+        <p th:text="${post.getContent()}"></p>
+<!--        This is the old latitude and longitude being replaced with map, -->
+<!--        <p th:text="${post.getLatitude()} + ' ' + ${post.getLongitude()}"></p>-->
+<!--        The map not interactive-->
+        <div class="post-map"
+             th:attr="data-lat=${post.latitude}, data-lng=${post.longitude}">
+        </div>
 
+
+
+    </div>
+<!--    This is the leaflet scripts, the first one is the style sheet needed for the map, -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<!--    this i believe is the java scrip making the map happen dont fully get js yet-->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<!--    Okay this below is the map logic where click sets the lat and lng numbers in our form which is hidden-->
+    <script>
+
+    // 1. Create map (this links to your <div id="map">)
+        const map = L.map('map').setView([51.505, -0.09], 13);
+        // 2. Add OpenStreetMap tiles (this is the actual map visuals)
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19
+        }).addTo(map);
+        // 3. Marker variable (we reuse it so we don't create infinite markers)
+        let marker;
+        // 4. When user clicks map → update hidden inputs
+        map.on('click', function (e) {
+        const lat = e.latlng.lat;
+        const lng = e.latlng.lng;
+        // THIS is the important bridge to Spring Boot
+        document.getElementById("lat").value = lat;
+        document.getElementById("lng").value = lng;
+        // Move marker or create it
+        if (marker) {
+        marker.setLatLng(e.latlng);
+        } else {
+        marker = L.marker(e.latlng).addTo(map);
+        }
+        });
+        </script>
     </body>
 </html>

@@ -1,0 +1,6 @@
+ALTER TABLE posts
+ADD COLUMN latitude DECIMAL(9,6),
+ADD COLUMN longitude DECIMAL(9,6),
+ADD COLUMN bird_name VARCHAR(100),
+ADD COLUMN user_img VARCHAR(100);
+
