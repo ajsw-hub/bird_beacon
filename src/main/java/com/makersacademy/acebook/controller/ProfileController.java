@@ -24,7 +24,7 @@ public class ProfileController {
     @Autowired
     UserRepository userRepository;
 
-    @GetMapping("/profile")
+    @GetMapping("/my-aviary")
     public ModelAndView showMyPostHistory(HttpSession session){
 
         System.out.println("SESSION: " + session);
@@ -39,7 +39,7 @@ public class ProfileController {
 
         List<Post> userPosts = postRepository.findByPosteridOrderByIdDesc(user.getId());
 
-        ModelAndView modelAndView = new ModelAndView("/profile");
+        ModelAndView modelAndView = new ModelAndView("/my-aviary");
 
         modelAndView.addObject("userPosts", userPosts);
         modelAndView.addObject("user", user);

@@ -10,9 +10,9 @@
     <body>
     <a href="/logout">Logout</a>
     <a href="/birdfeed">Bird Feed</a>
-    <a href="/profile">Profile</a>
+    <a href="/my-aviary">Profile</a>
 
-    <button><a href="/profile/edit-page">Edit</a></button>
+    <button><a href="/my-aviary/edit-page">Edit</a></button>
 
         <h3 th:text="${user.username}"></h3>
         <img th:src="@{'/images/' + ${user.profilepicture}}"
