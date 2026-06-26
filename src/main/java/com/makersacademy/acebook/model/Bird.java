@@ -24,6 +24,7 @@ public class Bird {
     private Float lengthmax;
     private Float wingspanmin;
     private Float wingspanmax;
+    private Integer rarity;
     private String images;
 
 }

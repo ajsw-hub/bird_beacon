@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface BirdRepository extends CrudRepository<Bird, Long> {
 
@@ -14,4 +15,6 @@ public interface BirdRepository extends CrudRepository<Bird, Long> {
     )
     List<Bird> findAllOrderByName();
 
+
+    Optional<Bird> findByName(String name);
 }

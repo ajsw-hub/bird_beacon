@@ -4,9 +4,16 @@ import com.makersacademy.acebook.model.Bird;
 import com.makersacademy.acebook.repository.BirdRepository;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
+
+import javax.swing.text.html.Option;
+import java.util.List;
+import java.util.Locale;
+import java.util.Optional;
 
 @RestController
 public class BirdpediaController {
@@ -23,11 +30,56 @@ public class BirdpediaController {
 
         birdpedia.addObject("allBirds", allBirds);
 
-        for (Bird bird : allBirds) {
-            System.out.println(bird.getName());
+        return birdpedia;
+
+    }
+
+    @GetMapping("/birdpedia/{birdId}")
+    public ModelAndView chosenBirdPage(HttpSession session, @PathVariable String birdId){
+        Optional<Bird> chosenBird;
+
+        try {
+            chosenBird = birdRepository.findById((Long.valueOf(birdId)));
+        } catch (Exception e) {
+            if (birdId.toLowerCase().contains("drop") || birdId.toLowerCase().contains("delete") || birdId.toLowerCase().contains("insert") || birdId.toLowerCase().contains("update")){
+                return new ModelAndView("/sql");
+            }
+            birdId = birdId.replaceAll("-", " ");
+            chosenBird = birdRepository.findByName(birdId);
+
         }
 
-        return birdpedia;
+        if(chosenBird.isPresent()){
+            String birdRarity = "";
+
+            switch (chosenBird.get().getRarity()){
+                case 1:
+                    birdRarity = "Common";
+                    break;
+                case 2:
+                    birdRarity = "Uncommon";
+                    break;
+                case 3:
+                    birdRarity = "Rare";
+                    break;
+                case 4:
+                    birdRarity = "Epic";
+                    break;
+                case 5:
+                    birdRarity = "Legendary";
+                    break;
+
+            }
+
+            ModelAndView birdPage = new ModelAndView("/birdpage");
+            birdPage.addObject("chosenBird", chosenBird.get());
+            birdPage.addObject("birdRarity", birdRarity);
+            return birdPage;
+        } else {
+            return new ModelAndView("/birdNotFound");
+
+        }
+
 
     }
 
