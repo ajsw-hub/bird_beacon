@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -27,8 +28,6 @@ public class ProfileController {
     @GetMapping("/my-aviary")
     public ModelAndView showMyPostHistory(HttpSession session){
 
-        System.out.println("SESSION: " + session);
-
         String username = session.getAttribute("username").toString();
 
 //        Optional<User> findingUser = userRepository.findUserByUsername(username);
@@ -45,9 +44,9 @@ public class ProfileController {
         modelAndView.addObject("user", user);
         modelAndView.addObject("post", new Post());
 
-
         return modelAndView;
 
     }
+
 
 }

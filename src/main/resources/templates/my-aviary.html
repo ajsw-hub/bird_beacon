@@ -21,6 +21,7 @@
 
         <form action="#" th:action="@{/new_sighting}" th:object="${post}" method="post" >
             <input type="text" th:field="*{content}" minlength = "3" required/>
+            <input type="hidden" name="redirect" value="/my-aviary" />
             <input type="submit">
         </form>
 
