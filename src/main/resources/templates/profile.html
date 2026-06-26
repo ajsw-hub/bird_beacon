@@ -12,17 +12,19 @@
     <a href="/birdfeed">Bird Feed</a>
     <a href="/profile">Profile</a>
 
-        <h1>Post History</h1>
+    <button><a href="/profile/edit-page">Edit</a></button>
 
-        <p th:each="post: ${userPosts}" th:text="${post.getContent()}"></p>
-        <p>User details:</p>
-        <p th:text="${user}"></p>
-        <img th:src="@{/images/default-profile-pic.jpg}"
-         class="user-img"
-         alt="Nav Profile Picture" />
+        <h3 th:text="${user.username}"></h3>
         <img th:src="@{'/images/' + ${user.profilepicture}}"
          class="user-img"
          alt="Nav Profile Picture" />
+
+        <h3>Post History</h3>
+
+        <p th:each="post: ${userPosts}" th:text="${post.getContent()}"></p>
+        <p>User details:</p>
+
+
 
     </body>
 
