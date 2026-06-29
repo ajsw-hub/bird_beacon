@@ -12,9 +12,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import javax.swing.text.html.Option;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 public class BirdpediaController {
@@ -29,7 +27,65 @@ public class BirdpediaController {
 
         ModelAndView birdpedia = new ModelAndView("birdpedia");
 
+        ArrayList<Bird> theBirds;
+
+        String[] alphabet = new String[26];
+        alphabet[0] = "A";
+        alphabet[1] = "B";
+        alphabet[2] = "C";
+        alphabet[3] = "D";
+        alphabet[4] = "E";
+        alphabet[5] = "F";
+        alphabet[6] = "G";
+        alphabet[7] = "H";
+        alphabet[8] = "I";
+        alphabet[9] = "J";
+        alphabet[10] = "K";
+        alphabet[11] = "L";
+        alphabet[12] = "M";
+        alphabet[13] = "N";
+        alphabet[14] = "O";
+        alphabet[15] = "P";
+        alphabet[16] = "Q";
+        alphabet[17] = "R";
+        alphabet[18] = "S";
+        alphabet[19] = "T";
+        alphabet[20] = "U";
+        alphabet[21] = "V";
+        alphabet[22] = "W";
+        alphabet[23] = "X";
+        alphabet[24] = "Y";
+        alphabet[25] = "Z";
+
+
+
+        List<List<Bird>> alphabeticalBirdsList = new ArrayList<>();
+
+        for(String letter : alphabet){
+
+            List<Bird> listofBirds = new ArrayList<>();
+
+            for(Bird bird : allBirds){
+
+                if(Objects.equals(bird.getName().charAt(0), letter.charAt(0))){
+
+                    listofBirds.add(bird);
+
+                }
+
+
+            }
+
+            alphabeticalBirdsList.add(listofBirds);
+
+        }
+
         birdpedia.addObject("allBirds", allBirds);
+        birdpedia.addObject("alphabet", alphabet);
+        birdpedia.addObject("alphabeticalBirdsList", alphabeticalBirdsList);
+
+
+
 
         return birdpedia;
 
