@@ -15,8 +15,8 @@ CREATE TABLE posts(
     posterId BIGINT NOT NUll REFERENCES users(id) ON UPDATE CASCADE
 );
 
-INSERT INTO posts (content, posterId) VALUES
-('Wow, I saw a bird', 1),
-('That bird be large',2),
-('I saw another bird!', 1),
-('That bird is even larger!',2);
+-- INSERT INTO posts (content, posterId) VALUES
+-- ('Wow, I saw a bird', 1),
+-- ('That bird be large',2),
+-- ('I saw another bird!', 1),
+-- ('That bird is even larger!',2);

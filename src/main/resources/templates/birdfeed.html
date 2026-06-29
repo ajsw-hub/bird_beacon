@@ -24,14 +24,12 @@
 <a href="/birdfeed">Bird Feed</a>
 <a href="/profile">Profile</a>
 <h1>🦩 I Like Birds - Birdfeed 🦩</h1>
-<!--THE FORM FOR CREATING A POST FROM HERE TILL ***-->
+
 <div class="post-form">
     <form action = "#" th:action="@{/new_sighting}" th:object="${post}" method = "post" enctype="multipart/form-data">
-        <!--The below is the old free text button no relation to birds db but the new code below it is work in progress -->
-        <!--        <label>Bird Name<input type="text" th:field="*{bird_name}" minlength="3" required/></label><br/>-->
+
         <label>Bird</label>
-        <!--        <input type="text" id="bird-search" placeholder="Search birds..." autocomplete="off">-->
-        <!--        <div id="suggestions"></div> the below will make toggle on off and the logic work. -->
+
         <div id="bird-search-wrapper">
             <input type="text" id="bird-search" placeholder="Search birds..." autocomplete="off">
             <div id="suggestions"></div>
@@ -42,73 +40,69 @@
         <label>Content</label></br>
         <input type="text" th:field="*{content}" minlength = "3" required placeholder="Your space to share your thoughts"/><br/>
 
-        <!--The below is the latitude and longitude text boxes comented out incase need a revert -->
-        <!--        <label>Latitude<input type="text" th:field="*{latitude}"/></label><br/>-->
-        <!--        <label>Longitude<input type="text" th:field="*{longitude}"/></label><br/>-->
-        <!-- this is the new hidden longitude and latitude fields which will be uodated by the map-->
-
         <input type="hidden" th:field="*{latitude}" id="lat"/><br/>
         <input type="hidden" th:field="*{longitude}" id="lng"/><br/>
-        <!--        this is where the moa shows-->
+        <!--        this is where the map shows-->
         <div id="map" style="height: 300px; width: 500px; margin-bottom: 10px;"></div>
         <p>Click on the map to set location 📍</p>
-        <!--        this is where the moa shows-->
-        <label>Use your own picture<input class="user-img" type="file" name="user_bird"/></label><br/>
+
+        <label>
+            Use your own picture
+            <input
+                    class="user-img"
+                    type="file"
+                    name="user_bird"
+                    accept="image/*"/>
+        </label><br/>
+
         <p id="image-error" style="color:red; display:none;">
             You must upload a picture when selecting "What is this bird?"
         </p>
+        <label>Date of sighting</label><br/>
+        <input type="date" th:field="*{dateOfSighting}" required/><br/>
         <input type="submit">
         <input type="reset" value="Reset"/>
     </form>
 </div>
-<!--    **************************************************************-->
 
-<!--    This section displays that you are logged in-->
 <div sec:authorize="isAuthenticated()" id="greeting">
     Signed in as <span sec:authentication="principal.attributes['email']"></span>
 </div>
 
-
-<!--THIS SECTION BELOW IS THE BIT WHERE WE LOOP THROUGH POSTS AND DISPLAY THEM ORDER IS CRURENTLY OFF-->
 <div class="posts-on-birdfeed" th:each="post: ${listOfPosts}">
-    <!--        <p th:text="${post.getBird_name()}"></p> This line is now redundent the bird_name is no longer in the table its bird id replaced with the below -->
-    <!--        <p th:text="${post.birdName}"></p>-->
+
     <p th:text="${post.birdName != null ? post.birdName : 'What is this bird?'}"></p>
-    <!--        <img th:src="@{'/postimg/' + ${post.getUser_img()}}" width="500" height="500" />-->
-<!--    <img th:src="@{'/postimg/' + ${post.user_img}}" width="500" height="500"> this is the standard line, below is the user priority and fallback to birds table url-->
-    <!-- USER IMAGE (highest priority) -->
+    <p th:text="'Seen on: ' + ${post.dateOfSighting}"></p>
     <img th:if="${post.user_img != null}"
          th:src="@{'/postimg/' + ${post.user_img}}"
          width="500" height="500"/>
-    <!-- BIRD IMAGE fallback -->
+
     <img th:if="${post.user_img == null and post.birdImage != null}"
          th:src="${post.birdImage}"
          width="500" height="500"/>
-    <!--        <p th:text="${post.getContent()}"></p>-->
+
     <p th:text="${post.content}"></p>
-    <!--        This is the old latitude and longitude being replaced with map, -->
-    <!--        <p th:text="${post.getLatitude()} + ' ' + ${post.getLongitude()}"></p>-->
-    <!--        The map not interactive-->
+
     <div class="mini-map"
          th:if="${post.latitude != null and post.longitude != null}"
          th:attr="data-lat=${post.latitude}, data-lng=${post.longitude}">
     </div>
+    <p th:text="${#temporals.format(post.createdAt, 'dd-MM-yyyy HH:mm')}"></p>
 </div>
 
 
 
 </div>
-<!--    This is the leaflet scripts, the first one is the style sheet needed for the map, -->
+
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script>
     // GLOBAL STATE (shared across all scripts)
     let unknownMode = false;
     let unknownRequiresImage = false;
 </script>
-<!--    this i believe is the java scrip making the map happen dont fully get js yet-->
+<!--MAP JAVA SCRIPT BITS-->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<!--    Okay this below is the map logic where click sets the lat and lng numbers in our form which is hidden-->
-<!--    This is java script for the post map when creating post.-->
+
 <script>
     // 1. Create map (this links to your <div id="map">)
         const map = L.map('map').setView([51.505, -0.09], 13);
@@ -161,18 +155,24 @@
     });
 
 </script>
-<!--    This Js is to prevent over 10mb uploads-->
+<!--    This Js is to prevent over 10mb uploads and also limits to pic file only-->
 <script>
     document.querySelector("input[name='user_bird']").addEventListener("change", function () {
-        const file = this.files[0];
-        if (!file) return;
-        const maxSize = 10 * 1024 * 1024; // 10MB in bytes
-        if (file.size > maxSize) {
-            alert("Image is too large! Max size is 10MB.");
-            // clear the input
-            this.value = "";
-        }
-    });
+    const file = this.files[0];
+    if (!file) return;
+    // Only allow images
+    if (!file.type.startsWith("image/")) {
+        alert("Only image files are allowed.");
+        this.value = "";
+        return;
+    }
+    const maxSize = 10 * 1024 * 1024;
+    if (file.size > maxSize) {
+        alert("Image is too large! Max size is 10MB.");
+        this.value = "";
+    }
+});
+
 </script>
 
 <!--    This iss the js for the bird search feature-->
@@ -212,44 +212,7 @@
         }, 200);
     });
 </script>
-<!--&lt;!&ndash;This is the js that will help set whats this bird id to null which is needed to post whats this bird&ndash;&gt;-->
-<!--<script>-->
-<!--    const unknownBirdBtn = document.getElementById("unknown-bird");-->
-<!--const birdWrapper = document.getElementById("bird-search-wrapper");-->
-<!--const birdInput = document.getElementById("bird-search");-->
-<!--const suggestions = document.getElementById("suggestions");-->
-<!--const birdId = document.getElementById("bird-id");-->
-<!--let unknownMode = false;-->
-<!--unknownBirdBtn.addEventListener("click", function () {-->
-<!--unknownMode = !unknownMode;-->
-<!--if (unknownMode) {-->
-<!--    // ENTER UNKNOWN MODE-->
-<!--    birdWrapper.style.display = "none";-->
-<!--    suggestions.innerHTML = "";-->
-<!--    birdId.value = null;-->
-<!--} else {-->
-<!--    // EXIT UNKNOWN MODE (RESET)-->
-<!--    birdWrapper.style.display = "block";-->
-<!--    birdInput.value = "";-->
-<!--    suggestions.innerHTML = "";-->
-<!--    birdId.value = "";-->
-<!--}-->
-<!--});-->
-<!--</script>-->
-<!--&lt;!&ndash;    This makes the reset button work with the toggle button.&ndash;&gt;-->
-<!--<script>-->
-<!--    document.querySelector("input[type='reset']").addEventListener("click", function () {-->
-<!--    // restore search box-->
-<!--    document.getElementById("bird-search-wrapper").style.display = "block";-->
-<!--    // clear values-->
-<!--    document.getElementById("bird-search").value = "";-->
-<!--    document.getElementById("bird-id").value = "";-->
-<!--    // clear suggestions-->
-<!--    document.getElementById("suggestions").innerHTML = "";-->
-<!--    // reset toggle state-->
-<!--    unknownMode = false;-->
-<!--});-->
-<!--</script>-->
+
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
@@ -296,42 +259,7 @@
         });
     });
 </script>
-<!--submit button blocked if no location submitted-->
-<!--<script>-->
-<!--    document.querySelector("form").addEventListener("submit", function (e) {-->
-<!--        const lat = document.getElementById("lat").value;-->
-<!--        const lng = document.getElementById("lng").value;-->
-<!--        if (!lat || !lng) {-->
-<!--            e.preventDefault();-->
-<!--            alert("Please select a location on the map 📍");-->
-<!--        }-->
-<!--    });-->
-<!--</script>-->
-<!--<script>-->
-<!--    document.querySelector("form").addEventListener("submit", function (e) {-->
-<!--    const lat = document.getElementById("lat").value;-->
-<!--    const lng = document.getElementById("lng").value;-->
-<!--    // LOCATION CHECK (keep your existing logic)-->
-<!--    if (!lat || !lng) {-->
-<!--        e.preventDefault();-->
-<!--        alert("Please select a location on the map 📍");-->
-<!--        return;-->
-<!--    }-->
-<!--    // IMAGE CHECK ONLY WHEN "UNKNOWN BIRD" IS ACTIVE-->
-<!--    if (unknownRequiresImage) {-->
-<!--        const file = imageInput.files[0];-->
-<!--        if (!file) {-->
-<!--            e.preventDefault();-->
-<!--            imageError.style.display = "block";-->
-<!--            // scroll user to image section-->
-<!--            imageInput.scrollIntoView({ behavior: "smooth", block: "center" });-->
-<!--            return;-->
-<!--        } else {-->
-<!--            imageError.style.display = "none";-->
-<!--        }-->
-<!--    }-->
-<!--});-->
-<!--</script>-->
+
 <script>
     document.querySelector("form").addEventListener("submit", function (e) {
         const lat = document.getElementById("lat").value;
@@ -359,13 +287,6 @@
     });
 </script>
 
-<!--Hide js error message once error is fixes for image upload-->
-<!--<script>-->
-<!--    const imageInput = document.querySelector("input[name='user_bird']");-->
-<!--    const imageError = document.getElementById("image-error");-->
-<!--    imageInput.addEventListener("change", function () {-->
-<!--        imageError.style.display = "none";-->
-<!--    });-->
-<!--</script>-->
+
 </body>
 </html>

@@ -20,6 +20,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Optional;
 import java.util.UUID;
+import java.time.LocalDateTime;
 
 @RestController
 public class PostController {
@@ -40,12 +41,20 @@ public class PostController {
             // now we are using the id we just got in user to assign it to the post, now we know who posted this post.
             post.setPosterId(currentUser.getId());
 
+            //sets thje time and date the post was created at and puts it in the posts table in teh database
+            post.setCreatedAt(LocalDateTime.now());
+
             //setting the upload directory to uploads/postimg
             Path uploadDir = Paths.get("uploads/postimg");
             //if that directory doesent exist create it, if it does no worries.
             Files.createDirectories(uploadDir);
             //if the name of the user_image from the form is not empty...
             if (!user_bird.isEmpty()){
+                // get the file type and assign it to a cariable
+                String contentType = user_bird.getContentType();
+                if (!contentType.startsWith("image/")) {
+                    throw new IllegalArgumentException("Only image files are allowed.");
+                }
                 //create a filename using 'uuid-theOriginalNameOfTheUploadedFile'
                 String filename = UUID.randomUUID() + "-" + user_bird.getOriginalFilename();
                 //this line is joining the filepath of uploads/postimg with the name of the file we created above.
@@ -58,6 +67,7 @@ public class PostController {
                 );
                 //simply setting the file name we created with uuid-original uploaded file name to the post under user_iamge column
                 post.setUser_img(filename);
+
 
             }
 

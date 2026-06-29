@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @Entity
@@ -28,5 +30,8 @@ public class Post {
     @Column(name = "bird_id")
     private Long birdId;
     private String user_img;
+    @Column(name = "date_of_sighting")
+    private LocalDate dateOfSighting;
+    private LocalDateTime createdAt;
 
 }

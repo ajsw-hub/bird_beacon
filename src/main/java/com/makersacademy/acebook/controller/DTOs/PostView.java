@@ -1,8 +1,11 @@
 package com.makersacademy.acebook.controller.DTOs;
 
 import lombok.Getter;
+import org.springframework.cglib.core.Local;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 public class PostView {
@@ -16,6 +19,8 @@ public class PostView {
     private String user_img;
     private String birdName;
     private String birdImage;
+    private LocalDate dateOfSighting;
+    private LocalDateTime createdAt;
 
     public PostView(
             Long id,
@@ -26,7 +31,10 @@ public class PostView {
             Long birdId,
             String user_img,
             String birdName,
-            String birdImage) {
+            String birdImage,
+            LocalDate dateOfSighting,
+            LocalDateTime createdAt
+            ) {
 
         this.id = id;
         this.content = content;
@@ -37,5 +45,7 @@ public class PostView {
         this.user_img = user_img;
         this.birdName = birdName;
         this.birdImage = birdImage;
+        this.dateOfSighting = dateOfSighting;
+        this.createdAt = createdAt;
     }
 }
