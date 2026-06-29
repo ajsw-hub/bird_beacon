@@ -37,7 +37,6 @@ public class UsersController {
         session.setAttribute("currentUser", currentUser);
         session.setAttribute("username", username);
 
-
         return new RedirectView("/birdfeed");
     }
 }

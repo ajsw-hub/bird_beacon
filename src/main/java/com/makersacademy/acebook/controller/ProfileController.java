@@ -32,7 +32,7 @@ public class ProfileController {
         Optional<User> findingUser = userRepository.findUserByUsername(username);
         User currentUser = findingUser.get();
 
-        List<Post> userPosts = postRepository.findByPosterid(currentUser.getId());
+        List<Post> userPosts = postRepository.findByPosterId(currentUser.getId());
 
         ModelAndView modelAndView = new ModelAndView("/profile");
 

@@ -38,7 +38,7 @@ public class PostController {
             //findingUser should only have one User instance in the optional type object so lets assign it to a single User type instance and make that User Instance the currentUser
             User currentUser = findingUser.get();
             // now we are using the id we just got in user to assign it to the post, now we know who posted this post.
-            post.setPosterid(currentUser.getId());
+            post.setPosterId(currentUser.getId());
 
             //setting the upload directory to uploads/postimg
             Path uploadDir = Paths.get("uploads/postimg");

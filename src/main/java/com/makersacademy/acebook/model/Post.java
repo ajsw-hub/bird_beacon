@@ -21,10 +21,12 @@ public class Post {
 
     private long id;
     private String content;
-    private long posterid;
+    @Column(name = "posterid")
+    private long posterId;
     private BigDecimal latitude;
     private BigDecimal longitude;
-    private String bird_name;
+    @Column(name = "bird_id")
+    private Long birdId;
     private String user_img;
 
 }

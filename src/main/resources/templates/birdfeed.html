@@ -1,33 +1,45 @@
 <!DOCTYPE html>
-    <html xmlns:th="http://www.thymeleaf.org"
-          xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5" >
-    <head lang="en">
-        <meta charset="UTF-8"/>
-        <title>Birdfeed</title>
-        <link rel="stylesheet" href="/main.css" />
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5" >
+<head lang="en">
+    <meta charset="UTF-8"/>
+    <title>Birdfeed</title>
+    <link rel="stylesheet" href="/main.css" />
 
-<!--        CSS for mini map can be moved to css file needed it here for build-->
-        <style>
-            .mini-map {
-                height: 100px;
-                width: 500px;
-                transition: all 0.3s ease;
-            }
-            .mini-map.expanded {
-                height: 300px;
-                width: 500px;
-            }
-        </style>
-    </head>
-    <body>
-    <a href="/logout">Logout</a>
-    <a href="/birdfeed">Bird Feed</a>
-    <a href="/profile">Profile</a>
-    <h1>🦩 I Like Birds - Birdfeed 🦩</h1>
-
-    <div class="post-form">
+    <!--        CSS for mini map can be moved to css file needed it here for build-->
+    <style>
+        .mini-map {
+            height: 100px;
+            width: 500px;
+            transition: all 0.3s ease;
+        }
+        .mini-map.expanded {
+            height: 300px;
+            width: 500px;
+        }
+    </style>
+</head>
+<body>
+<a href="/logout">Logout</a>
+<a href="/birdfeed">Bird Feed</a>
+<a href="/profile">Profile</a>
+<h1>🦩 I Like Birds - Birdfeed 🦩</h1>
+<!--THE FORM FOR CREATING A POST FROM HERE TILL ***-->
+<div class="post-form">
     <form action = "#" th:action="@{/new_sighting}" th:object="${post}" method = "post" enctype="multipart/form-data">
-        <label>Bird Name<input type="text" th:field="*{bird_name}" minlength="3" required/></label><br/>
+        <!--The below is the old free text button no relation to birds db but the new code below it is work in progress -->
+        <!--        <label>Bird Name<input type="text" th:field="*{bird_name}" minlength="3" required/></label><br/>-->
+        <label>Bird</label>
+        <!--        <input type="text" id="bird-search" placeholder="Search birds..." autocomplete="off">-->
+        <!--        <div id="suggestions"></div> the below will make toggle on off and the logic work. -->
+        <div id="bird-search-wrapper">
+            <input type="text" id="bird-search" placeholder="Search birds..." autocomplete="off">
+            <div id="suggestions"></div>
+        </div>
+
+        <input type="hidden" th:field="*{birdId}" id="bird-id"/>
+
+        <button type="button" id="unknown-bird">🐦 What's this bird?</button>
         <label>Content<input type="text" th:field="*{content}" minlength = "3" required placeholder="Your space to share your thoughts"/></label><br/>
 
         <!--The below is the latitude and longitude text boxes comented out incase need a revert -->
@@ -44,37 +56,45 @@
         <label>Use your own picture<input class="user-img" type="file" name="user_bird"/></label><br/>
         <input type="submit">
         <input type="reset" value="Reset"/>
-
     </form>
-    </div>
-    <div sec:authorize="isAuthenticated()" id="greeting">
-        Signed in as <span sec:authentication="principal.attributes['email']"></span>
-    </div>
+</div>
+<!--    **************************************************************-->
 
-    <div class="posts-on-birdfeed" th:each="post: ${listOfPosts}">
-        <p th:text="${post.getBird_name()}"></p>
-        <img th:src="@{'/postimg/' + ${post.getUser_img()}}" width="500" height="500" />
-        <p th:text="${post.getContent()}"></p>
-<!--        This is the old latitude and longitude being replaced with map, -->
-<!--        <p th:text="${post.getLatitude()} + ' ' + ${post.getLongitude()}"></p>-->
-<!--        The map not interactive-->
-        <div class="mini-map"
-             th:if="${post.latitude != null and post.longitude != null}"
-             th:attr="data-lat=${post.latitude}, data-lng=${post.longitude}">
-        </div>
-    </div>
+<!--    This section displays that you are logged in-->
+<div sec:authorize="isAuthenticated()" id="greeting">
+    Signed in as <span sec:authentication="principal.attributes['email']"></span>
+</div>
 
 
-
+<!--THIS SECTION BELOW IS THE BIT WHERE WE LOOP THROUGH POSTS AND DISPLAY THEM ORDER IS CRURENTLY OFF-->
+<div class="posts-on-birdfeed" th:each="post: ${listOfPosts}">
+    <!--        <p th:text="${post.getBird_name()}"></p> This line is now redundent the bird_name is no longer in the table its bird id replaced with the below -->
+    <!--        <p th:text="${post.birdName}"></p>-->
+    <p th:text="${post.birdName != null ? post.birdName : 'What is this bird?'}"></p>
+    <!--        <img th:src="@{'/postimg/' + ${post.getUser_img()}}" width="500" height="500" />-->
+    <img th:src="@{'/postimg/' + ${post.user_img}}" width="500" height="500">
+    <!--        <p th:text="${post.getContent()}"></p>-->
+    <p th:text="${post.content}"></p>
+    <!--        This is the old latitude and longitude being replaced with map, -->
+    <!--        <p th:text="${post.getLatitude()} + ' ' + ${post.getLongitude()}"></p>-->
+    <!--        The map not interactive-->
+    <div class="mini-map"
+         th:if="${post.latitude != null and post.longitude != null}"
+         th:attr="data-lat=${post.latitude}, data-lng=${post.longitude}">
     </div>
+</div>
+
+
+
+</div>
 <!--    This is the leaflet scripts, the first one is the style sheet needed for the map, -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <!--    this i believe is the java scrip making the map happen dont fully get js yet-->
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <!--    Okay this below is the map logic where click sets the lat and lng numbers in our form which is hidden-->
 
 <!--    This is java script for the post map when creating post.-->
-    <script>
+<script>
     // 1. Create map (this links to your <div id="map">)
         const map = L.map('map').setView([51.505, -0.09], 13);
         // 2. Add OpenStreetMap tiles (this is the actual map visuals)
@@ -97,34 +117,157 @@
         marker = L.marker(e.latlng).addTo(map);
         }
         });
-        </script>
+</script>
 
 <!--This is the JS for the little maps in the actual post -->
-    <script>
-        document.querySelectorAll(".mini-map").forEach(function(el) {
-            const lat = parseFloat(el.dataset.lat);
-            const lng = parseFloat(el.dataset.lng);
-            const miniMap = L.map(el, {
-                zoomControl: false,
-                scrollWheelZoom: false,
-                dragging: false,
-                doubleClickZoom: false,
-                boxZoom: false
-            }).setView([lat, lng], 13);
-            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                maxZoom: 19
-            }).addTo(miniMap);
-            L.marker([lat, lng]).addTo(miniMap);
+<script>
+    document.querySelectorAll(".mini-map").forEach(function(el) {
+        const lat = parseFloat(el.dataset.lat);
+        const lng = parseFloat(el.dataset.lng);
+        const miniMap = L.map(el, {
+            zoomControl: false,
+            scrollWheelZoom: false,
+            dragging: false,
+            doubleClickZoom: false,
+            boxZoom: false
+        }).setView([lat, lng], 13);
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19
+        }).addTo(miniMap);
+        L.marker([lat, lng]).addTo(miniMap);
 
-            // click = expand
-            el.addEventListener("click", function () {
-                el.classList.toggle("expanded");
-                setTimeout(() => {
-                    miniMap.invalidateSize();
-                }, 200);
-            });
+        // click = expand
+        el.addEventListener("click", function () {
+            el.classList.toggle("expanded");
+            setTimeout(() => {
+                miniMap.invalidateSize();
+            }, 200);
         });
+    });
 
-    </script>
-    </body>
+</script>
+<!--    This Js is to prevent over 10mb uploads-->
+<script>
+    document.querySelector("input[name='user_bird']").addEventListener("change", function () {
+        const file = this.files[0];
+        if (!file) return;
+        const maxSize = 10 * 1024 * 1024; // 10MB in bytes
+        if (file.size > maxSize) {
+            alert("Image is too large! Max size is 10MB.");
+            // clear the input
+            this.value = "";
+        }
+    });
+</script>
+
+<!--    This iss the js for the bird search feature-->
+<script>
+    const input = document.getElementById("bird-search");
+    const suggestions = document.getElementById("suggestions");
+    const hiddenId = document.getElementById("bird-id");
+    let timeout;
+    input.addEventListener("input", function () {
+        clearTimeout(timeout);
+        const q = this.value;
+
+        if (q.length < 2) {
+            suggestions.innerHTML = "";
+            return;
+        }
+        timeout = setTimeout(() => {
+            fetch(`/birds/search?q=${encodeURIComponent(q)}`)
+                .then(res => res.json())
+                .then(data => {
+                    suggestions.innerHTML = "";
+                    data.forEach(bird => {
+                        const div = document.createElement("div");
+                        div.textContent = bird.name;
+                        div.style.padding = "6px";
+                        div.style.cursor = "pointer";
+                        div.style.background = "white";
+                        div.style.border = "1px solid #ddd";
+                        div.addEventListener("click", () => {
+                            input.value = bird.name;
+                            hiddenId.value = bird.id;
+                            suggestions.innerHTML = "";
+                        });
+                        suggestions.appendChild(div);
+                    });
+                });
+        }, 200);
+    });
+</script>
+<!--&lt;!&ndash;This is the js that will help set whats this bird id to null which is needed to post whats this bird&ndash;&gt;-->
+<!--<script>-->
+<!--    const unknownBirdBtn = document.getElementById("unknown-bird");-->
+<!--const birdWrapper = document.getElementById("bird-search-wrapper");-->
+<!--const birdInput = document.getElementById("bird-search");-->
+<!--const suggestions = document.getElementById("suggestions");-->
+<!--const birdId = document.getElementById("bird-id");-->
+<!--let unknownMode = false;-->
+<!--unknownBirdBtn.addEventListener("click", function () {-->
+<!--unknownMode = !unknownMode;-->
+<!--if (unknownMode) {-->
+<!--    // ENTER UNKNOWN MODE-->
+<!--    birdWrapper.style.display = "none";-->
+<!--    suggestions.innerHTML = "";-->
+<!--    birdId.value = null;-->
+<!--} else {-->
+<!--    // EXIT UNKNOWN MODE (RESET)-->
+<!--    birdWrapper.style.display = "block";-->
+<!--    birdInput.value = "";-->
+<!--    suggestions.innerHTML = "";-->
+<!--    birdId.value = "";-->
+<!--}-->
+<!--});-->
+<!--</script>-->
+<!--&lt;!&ndash;    This makes the reset button work with the toggle button.&ndash;&gt;-->
+<!--<script>-->
+<!--    document.querySelector("input[type='reset']").addEventListener("click", function () {-->
+<!--    // restore search box-->
+<!--    document.getElementById("bird-search-wrapper").style.display = "block";-->
+<!--    // clear values-->
+<!--    document.getElementById("bird-search").value = "";-->
+<!--    document.getElementById("bird-id").value = "";-->
+<!--    // clear suggestions-->
+<!--    document.getElementById("suggestions").innerHTML = "";-->
+<!--    // reset toggle state-->
+<!--    unknownMode = false;-->
+<!--});-->
+<!--</script>-->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const unknownBirdBtn = document.getElementById("unknown-bird");
+        const birdWrapper = document.getElementById("bird-search-wrapper");
+        const birdInput = document.getElementById("bird-search");
+        const suggestions = document.getElementById("suggestions");
+        const birdId = document.getElementById("bird-id");
+        const resetBtn = document.querySelector("input[type='reset']");
+        let unknownMode = false;
+        unknownBirdBtn.addEventListener("click", function () {
+            unknownMode = !unknownMode;
+            if (unknownMode) {
+                // ENTER UNKNOWN MODE
+                birdWrapper.style.display = "none";
+                suggestions.innerHTML = "";
+                birdInput.value = "What is this bird";
+                birdId.value = "";   // IMPORTANT: keep as empty string for Spring binding
+            } else {
+                // EXIT UNKNOWN MODE
+                birdWrapper.style.display = "block";
+                birdInput.value = "";
+                birdId.value = "";
+                suggestions.innerHTML = "";
+            }
+        });
+        resetBtn.addEventListener("click", function () {
+            unknownMode = false;
+            birdWrapper.style.display = "block";
+            birdInput.value = "";
+            birdId.value = "";
+            suggestions.innerHTML = "";
+        });
+    });
+</script>
+</body>
 </html>

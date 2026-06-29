@@ -13,7 +13,7 @@ CREATE TABLE birds (
 	rarity INTEGER,
 	images VARCHAR(100)
 );
-
+INSERT INTO birds (name) VALUES ('What is this bird?');
 INSERT INTO birds (name, sciName, family, birdOrder, status, lengthMin, lengthMax, wingspanMin, wingspanmax,images, rarity) VALUES
 ('Black-bellied Whistling-Duck','Dendrocygna autumnalis','Anatidae','Anseriformes','Low Concern',47,51,NULL,NULL,'https://images.unsplash.com/photo-1644610901347-b05ec91bb9b2',2),
 ('Fulvous Whistling-Duck','Dendrocygna bicolor','Anatidae','Anseriformes','Low Concern',44,51,NULL,NULL,'https://images.unsplash.com/photo-1542252223-c7f5b1142f93',5),
