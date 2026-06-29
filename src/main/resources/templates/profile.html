@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5" >
+
+    <head>
+        <meta charset="UTF-8">
+        <title>Profile</title>
+    </head>
+
+    <body>
+    <a href="/logout">Logout</a>
+    <a href="/birdfeed">Bird Feed</a>
+    <a href="/my-aviary">Profile</a>
+    <a href="/birdpedia">Birdpedia</a>
+
+        <h1>Post History</h1>
+
+        <p th:each="post: ${userPosts}" th:text="${post.getContent()}"></p>
+
+    </body>
+
+</html>
