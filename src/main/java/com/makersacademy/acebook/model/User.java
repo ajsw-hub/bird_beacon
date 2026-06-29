@@ -36,6 +36,7 @@ public class User {
         this.username = username;
         this.email = email;
         this.enabled = TRUE;
+        this.profilepicture = "default-profile-pic.jpg";
 
     }
 }

@@ -8,3 +8,11 @@
     text-align: left;
     margin-bottom: 0.5rem;;
 }
+
+nav-btn {
+    background: #4a6fa5;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 8px;
+}
+
