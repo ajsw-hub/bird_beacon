@@ -65,8 +65,37 @@ public class BirdpediaController {
 
         List<List<Bird>> alphabeticalBirdsList = new ArrayList<>();
 
-        ArrayList<String> htmlBirdIds = new ArrayList<String>();
+        ArrayList<Long> htmlBirdIds = new ArrayList<Long>();
 
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+        ArrayList<String> expression1 = new ArrayList<String>();
+        ArrayList<String> expression2 = new ArrayList<String>();
+        ArrayList<String> expression3 = new ArrayList<String>();
+        ArrayList<String> expression4 = new ArrayList<String>();
+
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
         for(String letter : alphabet){
 
@@ -78,7 +107,12 @@ public class BirdpediaController {
                 if(Objects.equals(bird.getName().charAt(0), letter.charAt(0))){
 
                     listofBirds.add(bird);
-                    htmlBirdIds.add("birdId_"+ (Long) bird.getId());
+                    htmlBirdIds.add((Long) bird.getId());
+
+                    expression1.add("const bird_" + bird.getId() + "_hover"+ " = document.getElementById(\"bird_" + bird.getId() + "\");" );
+                    expression2.add("const bird_" + bird.getId() + "_popup"+ " = document.getElementById(\"bird_" + bird.getId() + "_popup\");" );
+                    expression3.add("bird_" + bird.getId() + "_popup" +".addEventListener" +"('mouseenter',() => {" + "bird_" + bird.getId() + "_popup" +".style.display = 'block'; });");
+                    expression4.add("bird_" + bird.getId() + "_popup" +".addEventListener" +"('mouseleave',() => {" + "bird_" + bird.getId() + "_popup" +".style.display = 'none'; });");
 
 
                 }
@@ -91,10 +125,22 @@ public class BirdpediaController {
         }
 
 
+
+        System.out.println(expression1.get(1));
+        System.out.println(expression2.get(1));
+        System.out.println(expression3.get(1));
+        System.out.println(expression4.get(1));
+
+        String bird_81 = "bird_81";
+        String bird_22 = "bird_22";
+
         birdpedia.addObject("allBirds", allBirds);
         birdpedia.addObject("alphabet", alphabet);
         birdpedia.addObject("alphabeticalBirdsList", alphabeticalBirdsList);
-//        birdpedia.addObject("birdCount", birdCount);
+
+        birdpedia.addObject("bird_81", bird_81);
+        birdpedia.addObject("bird_22", bird_22);
+
         birdpedia.addObject("htmlBirdIds", htmlBirdIds);
 
 

@@ -37,32 +37,51 @@
                     <a th:href="@{/birdpedia/{birdId}(birdId = ${bird.getId()})}">
                         <p th:text = "${bird.getName()}"></p>
                     </a>
-                    <div id="elementToPopup" class = "popupBox">Popped Up Content - Javascript Approach</div>
+                    <div th:id="'bird_'+${bird.getId()}+'_popup'" class = "popupBox" th:text = "'Hello, I am the ' + ${bird.getName()}"></div>
                 </li>
             </ul>
 
         </th:block>
 
 
-<!--        <script>-->
-<!--            const elementToHover = document.getElementById('bird_81');-->
-<!--            const elementToPopup = document.getElementById('elementToPopup');-->
-
-<!--            elementToHover.addEventListener('mouseenter',() => {elementToPopup.style.display = 'block'; });-->
-<!--            elementToHover.addEventListener('mouseleave',() => {elementToPopup.style.display = 'none';});-->
-<!--        </script>-->
 
         <script th:inline="javascript">
-<!--            /*<![CDATA[*/-->
-<!--            ...-->
+
             const elementToHover = document.getElementById([[${bird_81}]]);
-            const elementToPopup = document.getElementById('elementToPopup');
+            const elementToPopup = document.getElementById([[${bird_81}+'_popup']]);
 
             elementToHover.addEventListener('mouseenter',() => {elementToPopup.style.display = 'block'; });
             elementToHover.addEventListener('mouseleave',() => {elementToPopup.style.display = 'none';});
-<!--            ...-->
-<!--            /*]]>*/-->
+
         </script>
+
+        <script th:inline="javascript">
+            const elementToHover22 = document.getElementById([[${bird_22}]]);
+            const elementToPopup22 = document.getElementById([[${bird_22}+'_popup']]);
+
+            elementToHover22.addEventListener('mouseenter',() => {elementToPopup22.style.display = 'block'; });
+            elementToHover22.addEventListener('mouseleave',() => {elementToPopup22.style.display = 'none';});
+
+        </script>
+
+        <script>
+
+
+
+        </script>
+
+<!--        <th:block th:each = "bird : ${htmlBirdIds}">-->
+
+<!--            <script th:inline="javascript">-->
+<!--                            const [['birdId_hover_'+${bird}]] = document.getElementById([['birdId_' + ${bird}]]);-->
+<!--                            const [['birdId_popup_'+${bird}]] = document.getElementById([['bird_' + ${bird} + '_popup']]);-->
+
+<!--                            [['birdId_hover_'+${bird}]].addEventListener('mouseenter',() => {[['birdId_popup_'+${bird}]].style.display = 'block'; });-->
+<!--                            [['birdId_hover_'+${bird}]].addEventListener('mouseleave',() => {[['birdId_popup_'+${bird}]].style.display = 'none';});-->
+<!--            </script>-->
+<!--        </th:block>-->
+
+
 
     </body>
 </html>
