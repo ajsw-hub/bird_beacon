@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5" >
+    <head>
+        <meta charset="UTF-8">
+        <title>Birdpedia</title>
+    </head>
+
+    <body>
+        <a href="/logout">Logout</a>
+        <a href="/birdfeed">Bird Feed</a>
+        <a href="/my-aviary">Profile</a>
+        <a href="/birdpedia">Birdpedia</a>
+        <h1 class="page_title">Birdpedia</h1>
+
+<!--        <ul>-->
+<!--            <li th:each = "bird : ${allBirds}">-->
+<!--                <a th:href="@{/birdpedia/{birdId}(birdId = ${bird.getId()})}">-->
+<!--                    <p th:text = "${bird.getName()}"></p>-->
+<!--                </a>-->
+<!--            </li>-->
+<!--        </ul>-->
+
+        <th:block th:each = "letter : ${#numbers.sequence(0,25)}">
+
+            <h3 th:text = "${alphabet[letter]}"></h3>
+<!--            <p th:each = "bird : ${alphabeticalBirdsList[letter]}" th:text = "${bird.getName()}"></p>-->
+            <ul>
+                <li th:each = "bird : ${alphabeticalBirdsList[letter]}">
+                    <a th:href="@{/birdpedia/{birdId}(birdId = ${bird.getId()})}">
+                        <p th:text = "${bird.getName()}"></p>
+                    </a>
+                </li>
+            </ul>
+
+        </th:block>
+
+<!--    <div th:each = "letter : ${alphabet}">-->
+<!--        <h3 th:text = "${letter}"></h3>-->
+<!--        <ul>-->
+<!--            <li th:each = "bird : ${alphabeticalBirds.get({alphabet[letter]})}" th:text = '${bird.getName()}'>geoff</li>-->
+<!--        </ul>-->
+<!--    </div>-->
+
+    </body>
+</html>
