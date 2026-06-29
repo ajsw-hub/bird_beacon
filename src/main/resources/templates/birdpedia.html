@@ -4,6 +4,20 @@
     <head>
         <meta charset="UTF-8">
         <title>Birdpedia</title>
+
+        <style>
+            .popupBox {
+                display: none;
+                position: fixed;
+                top: 30px;
+                right: 7px;
+                background-color: blue;
+                color: #fff;
+                padding: 8px;
+                border-radius: 5px;
+            }
+        </style>
+
     </head>
 
     <body>
@@ -13,34 +27,42 @@
         <a href="/birdpedia">Birdpedia</a>
         <h1 class="page_title">Birdpedia</h1>
 
-<!--        <ul>-->
-<!--            <li th:each = "bird : ${allBirds}">-->
-<!--                <a th:href="@{/birdpedia/{birdId}(birdId = ${bird.getId()})}">-->
-<!--                    <p th:text = "${bird.getName()}"></p>-->
-<!--                </a>-->
-<!--            </li>-->
-<!--        </ul>-->
+
 
         <th:block th:each = "letter : ${#numbers.sequence(0,25)}">
 
             <h3 th:text = "${alphabet[letter]}"></h3>
-<!--            <p th:each = "bird : ${alphabeticalBirdsList[letter]}" th:text = "${bird.getName()}"></p>-->
             <ul>
-                <li th:each = "bird : ${alphabeticalBirdsList[letter]}">
+                <li th:each = "bird : ${alphabeticalBirdsList[letter]}" th:id="'bird_' + ${bird.getId()}">
                     <a th:href="@{/birdpedia/{birdId}(birdId = ${bird.getId()})}">
                         <p th:text = "${bird.getName()}"></p>
                     </a>
+                    <div id="elementToPopup" class = "popupBox">Popped Up Content - Javascript Approach</div>
                 </li>
             </ul>
 
         </th:block>
 
-<!--    <div th:each = "letter : ${alphabet}">-->
-<!--        <h3 th:text = "${letter}"></h3>-->
-<!--        <ul>-->
-<!--            <li th:each = "bird : ${alphabeticalBirds.get({alphabet[letter]})}" th:text = '${bird.getName()}'>geoff</li>-->
-<!--        </ul>-->
-<!--    </div>-->
+
+<!--        <script>-->
+<!--            const elementToHover = document.getElementById('bird_81');-->
+<!--            const elementToPopup = document.getElementById('elementToPopup');-->
+
+<!--            elementToHover.addEventListener('mouseenter',() => {elementToPopup.style.display = 'block'; });-->
+<!--            elementToHover.addEventListener('mouseleave',() => {elementToPopup.style.display = 'none';});-->
+<!--        </script>-->
+
+        <script th:inline="javascript">
+<!--            /*<![CDATA[*/-->
+<!--            ...-->
+            const elementToHover = document.getElementById([[${bird_81}]]);
+            const elementToPopup = document.getElementById('elementToPopup');
+
+            elementToHover.addEventListener('mouseenter',() => {elementToPopup.style.display = 'block'; });
+            elementToHover.addEventListener('mouseleave',() => {elementToPopup.style.display = 'none';});
+<!--            ...-->
+<!--            /*]]>*/-->
+        </script>
 
     </body>
 </html>

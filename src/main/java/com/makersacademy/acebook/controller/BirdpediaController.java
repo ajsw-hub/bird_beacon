@@ -10,9 +10,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
+import org.w3c.dom.ranges.Range;
 
 import javax.swing.text.html.Option;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @RestController
 public class BirdpediaController {
@@ -24,6 +27,7 @@ public class BirdpediaController {
     public ModelAndView birdpedia(HttpSession session){
 
         Iterable<Bird> allBirds = birdRepository.findAllOrderByName();
+        Integer countOfBirds = birdRepository.countBirds();
 
         ModelAndView birdpedia = new ModelAndView("birdpedia");
 
@@ -61,15 +65,21 @@ public class BirdpediaController {
 
         List<List<Bird>> alphabeticalBirdsList = new ArrayList<>();
 
+        ArrayList<String> htmlBirdIds = new ArrayList<String>();
+
+
         for(String letter : alphabet){
 
             List<Bird> listofBirds = new ArrayList<>();
 
             for(Bird bird : allBirds){
 
+
                 if(Objects.equals(bird.getName().charAt(0), letter.charAt(0))){
 
                     listofBirds.add(bird);
+                    htmlBirdIds.add("birdId_"+ (Long) bird.getId());
+
 
                 }
 
@@ -80,9 +90,12 @@ public class BirdpediaController {
 
         }
 
+
         birdpedia.addObject("allBirds", allBirds);
         birdpedia.addObject("alphabet", alphabet);
         birdpedia.addObject("alphabeticalBirdsList", alphabeticalBirdsList);
+//        birdpedia.addObject("birdCount", birdCount);
+        birdpedia.addObject("htmlBirdIds", htmlBirdIds);
 
 
 
