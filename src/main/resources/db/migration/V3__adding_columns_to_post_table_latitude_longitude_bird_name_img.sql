@@ -3,4 +3,5 @@ ADD COLUMN latitude DECIMAL(9,6),
 ADD COLUMN longitude DECIMAL(9,6),
 ADD COLUMN bird_id BIGINT REFERENCES birds(id) ON UPDATE CASCADE,
 ADD COLUMN user_img VARCHAR(100);
+ADD COLUMN date_of_sighting DATE;
 

@@ -15,6 +15,7 @@ public class PostView {
     private Long birdId;
     private String user_img;
     private String birdName;
+    private String birdImage;
 
     public PostView(
             Long id,
@@ -24,7 +25,8 @@ public class PostView {
             BigDecimal longitude,
             Long birdId,
             String user_img,
-            String birdName) {
+            String birdName,
+            String birdImage) {
 
         this.id = id;
         this.content = content;
@@ -34,5 +36,6 @@ public class PostView {
         this.birdId = birdId;
         this.user_img = user_img;
         this.birdName = birdName;
+        this.birdImage = birdImage;
     }
 }

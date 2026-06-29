@@ -19,7 +19,8 @@ public interface PostRepository extends CrudRepository<Post, Long> {
             p.longitude,
             p.birdId,
             p.user_img,
-            b.name
+            b.name,
+            b.images
         )
         FROM Post p
         LEFT JOIN Bird b ON p.birdId = b.id

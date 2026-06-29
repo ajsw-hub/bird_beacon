@@ -35,12 +35,12 @@
         <div id="bird-search-wrapper">
             <input type="text" id="bird-search" placeholder="Search birds..." autocomplete="off">
             <div id="suggestions"></div>
-        </div>
-
+        </div><br/>
         <input type="hidden" th:field="*{birdId}" id="bird-id"/>
 
-        <button type="button" id="unknown-bird">🐦 What's this bird?</button>
-        <label>Content<input type="text" th:field="*{content}" minlength = "3" required placeholder="Your space to share your thoughts"/></label><br/>
+        <button type="button" id="unknown-bird">🐦 What's this bird?</button><br/>
+        <label>Content</label></br>
+        <input type="text" th:field="*{content}" minlength = "3" required placeholder="Your space to share your thoughts"/><br/>
 
         <!--The below is the latitude and longitude text boxes comented out incase need a revert -->
         <!--        <label>Latitude<input type="text" th:field="*{latitude}"/></label><br/>-->
@@ -54,6 +54,9 @@
         <p>Click on the map to set location 📍</p>
         <!--        this is where the moa shows-->
         <label>Use your own picture<input class="user-img" type="file" name="user_bird"/></label><br/>
+        <p id="image-error" style="color:red; display:none;">
+            You must upload a picture when selecting "What is this bird?"
+        </p>
         <input type="submit">
         <input type="reset" value="Reset"/>
     </form>
@@ -72,7 +75,15 @@
     <!--        <p th:text="${post.birdName}"></p>-->
     <p th:text="${post.birdName != null ? post.birdName : 'What is this bird?'}"></p>
     <!--        <img th:src="@{'/postimg/' + ${post.getUser_img()}}" width="500" height="500" />-->
-    <img th:src="@{'/postimg/' + ${post.user_img}}" width="500" height="500">
+<!--    <img th:src="@{'/postimg/' + ${post.user_img}}" width="500" height="500"> this is the standard line, below is the user priority and fallback to birds table url-->
+    <!-- USER IMAGE (highest priority) -->
+    <img th:if="${post.user_img != null}"
+         th:src="@{'/postimg/' + ${post.user_img}}"
+         width="500" height="500"/>
+    <!-- BIRD IMAGE fallback -->
+    <img th:if="${post.user_img == null and post.birdImage != null}"
+         th:src="${post.birdImage}"
+         width="500" height="500"/>
     <!--        <p th:text="${post.getContent()}"></p>-->
     <p th:text="${post.content}"></p>
     <!--        This is the old latitude and longitude being replaced with map, -->
@@ -89,10 +100,14 @@
 </div>
 <!--    This is the leaflet scripts, the first one is the style sheet needed for the map, -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script>
+    // GLOBAL STATE (shared across all scripts)
+    let unknownMode = false;
+    let unknownRequiresImage = false;
+</script>
 <!--    this i believe is the java scrip making the map happen dont fully get js yet-->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <!--    Okay this below is the map logic where click sets the lat and lng numbers in our form which is hidden-->
-
 <!--    This is java script for the post map when creating post.-->
 <script>
     // 1. Create map (this links to your <div id="map">)
@@ -235,6 +250,7 @@
 <!--    unknownMode = false;-->
 <!--});-->
 <!--</script>-->
+
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         const unknownBirdBtn = document.getElementById("unknown-bird");
@@ -243,7 +259,10 @@
         const suggestions = document.getElementById("suggestions");
         const birdId = document.getElementById("bird-id");
         const resetBtn = document.querySelector("input[type='reset']");
-        let unknownMode = false;
+        const imageInput = document.querySelector("input[name='user_bird']");
+        const imageError = document.getElementById("image-error");
+
+
         unknownBirdBtn.addEventListener("click", function () {
             unknownMode = !unknownMode;
             if (unknownMode) {
@@ -252,12 +271,14 @@
                 suggestions.innerHTML = "";
                 birdInput.value = "What is this bird";
                 birdId.value = "";   // IMPORTANT: keep as empty string for Spring binding
+                unknownRequiresImage = true;
             } else {
                 // EXIT UNKNOWN MODE
                 birdWrapper.style.display = "block";
                 birdInput.value = "";
                 birdId.value = "";
                 suggestions.innerHTML = "";
+                unknownRequiresImage = false;
             }
         });
         resetBtn.addEventListener("click", function () {
@@ -267,7 +288,84 @@
             birdId.value = "";
             suggestions.innerHTML = "";
         });
+                // Hide error when user selects an image
+        imageInput.addEventListener("change", function () {
+            if (this.files.length > 0) {
+                imageError.style.display = "none";
+            }
+        });
     });
 </script>
+<!--submit button blocked if no location submitted-->
+<!--<script>-->
+<!--    document.querySelector("form").addEventListener("submit", function (e) {-->
+<!--        const lat = document.getElementById("lat").value;-->
+<!--        const lng = document.getElementById("lng").value;-->
+<!--        if (!lat || !lng) {-->
+<!--            e.preventDefault();-->
+<!--            alert("Please select a location on the map 📍");-->
+<!--        }-->
+<!--    });-->
+<!--</script>-->
+<!--<script>-->
+<!--    document.querySelector("form").addEventListener("submit", function (e) {-->
+<!--    const lat = document.getElementById("lat").value;-->
+<!--    const lng = document.getElementById("lng").value;-->
+<!--    // LOCATION CHECK (keep your existing logic)-->
+<!--    if (!lat || !lng) {-->
+<!--        e.preventDefault();-->
+<!--        alert("Please select a location on the map 📍");-->
+<!--        return;-->
+<!--    }-->
+<!--    // IMAGE CHECK ONLY WHEN "UNKNOWN BIRD" IS ACTIVE-->
+<!--    if (unknownRequiresImage) {-->
+<!--        const file = imageInput.files[0];-->
+<!--        if (!file) {-->
+<!--            e.preventDefault();-->
+<!--            imageError.style.display = "block";-->
+<!--            // scroll user to image section-->
+<!--            imageInput.scrollIntoView({ behavior: "smooth", block: "center" });-->
+<!--            return;-->
+<!--        } else {-->
+<!--            imageError.style.display = "none";-->
+<!--        }-->
+<!--    }-->
+<!--});-->
+<!--</script>-->
+<script>
+    document.querySelector("form").addEventListener("submit", function (e) {
+        const lat = document.getElementById("lat").value;
+        const lng = document.getElementById("lng").value;
+        // 1. LOCATION CHECK
+        if (!lat || !lng) {
+            e.preventDefault();
+            alert("Please select a location on the map 📍");
+            return;
+        }
+        // 2. IMAGE REQUIRED ONLY FOR UNKNOWN BIRD
+        if (unknownRequiresImage === true) {
+            const fileInput = document.querySelector("input[name='user_bird']");
+            const file = fileInput.files[0];
+            if (!file) {
+                e.preventDefault();
+                document.getElementById("image-error").style.display = "block";
+                fileInput.scrollIntoView({
+                    behavior: "smooth",
+                    block: "center"
+                });
+                return;
+            }
+        }
+    });
+</script>
+
+<!--Hide js error message once error is fixes for image upload-->
+<!--<script>-->
+<!--    const imageInput = document.querySelector("input[name='user_bird']");-->
+<!--    const imageError = document.getElementById("image-error");-->
+<!--    imageInput.addEventListener("change", function () {-->
+<!--        imageError.style.display = "none";-->
+<!--    });-->
+<!--</script>-->
 </body>
 </html>
