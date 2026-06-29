@@ -44,6 +44,9 @@
         <input type="hidden" th:field="*{longitude}" id="lng"/><br/>
         <!--        this is where the map shows-->
         <div id="map" style="height: 300px; width: 500px; margin-bottom: 10px;"></div>
+        <button type="button" id="current-location">
+            📍 Use My Current Location
+        </button>
         <p>Click on the map to set location 📍</p>
 
         <label>
@@ -106,19 +109,24 @@
 <script>
     // 1. Create map (this links to your <div id="map">)
         const map = L.map('map').setView([51.505, -0.09], 13);
+
         // 2. Add OpenStreetMap tiles (this is the actual map visuals)
         L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19
         }).addTo(map);
+
         // 3. Marker variable (we reuse it so we don't create infinite markers)
         let marker;
+
         // 4. When user clicks map → update hidden inputs
         map.on('click', function (e) {
         const lat = e.latlng.lat;
         const lng = e.latlng.lng;
+
         // THIS is the important bridge to Spring Boot
         document.getElementById("lat").value = lat;
         document.getElementById("lng").value = lng;
+
         // Move marker or create it
         if (marker) {
         marker.setLatLng(e.latlng);
@@ -126,6 +134,29 @@
         marker = L.marker(e.latlng).addTo(map);
         }
         });
+        // -------------THIS SECTION IS THE MY LOCATION BUTTON JS----------------
+
+    // USER CLICKS "USE MY LOCATION"
+    // -----------------------------
+    const locationButton = document.getElementById("current-location");
+    locationButton.addEventListener("click", function () {
+        if (!navigator.geolocation) {
+            alert("Your browser does not support GPS.");
+            return;
+        }
+        navigator.geolocation.getCurrentPosition(function(position) {
+            const lat = position.coords.latitude;
+            const lng = position.coords.longitude;
+            document.getElementById("lat").value = lat;
+            document.getElementById("lng").value = lng;
+            if (marker) {
+                marker.setLatLng([lat, lng]);
+            } else {
+                marker = L.marker([lat, lng]).addTo(map);
+            }
+            map.setView([lat, lng], 15);
+        });
+    });
 </script>
 
 <!--This is the JS for the little maps in the actual post -->
