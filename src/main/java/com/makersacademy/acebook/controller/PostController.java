@@ -22,6 +22,8 @@ import java.util.Optional;
 import java.util.UUID;
 import java.time.LocalDateTime;
 
+import static java.lang.Boolean.TRUE;
+
 @RestController
 public class PostController {
     @Autowired
@@ -40,6 +42,7 @@ public class PostController {
             User currentUser = findingUser.get();
             // now we are using the id we just got in user to assign it to the post, now we know who posted this post.
             post.setPosterId(currentUser.getId());
+            post.setEnabled(TRUE);
 
             //sets thje time and date the post was created at and puts it in the posts table in teh database
             post.setCreatedAt(LocalDateTime.now());

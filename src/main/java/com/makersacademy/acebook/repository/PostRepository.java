@@ -28,6 +28,8 @@ public interface PostRepository extends CrudRepository<Post, Long> {
         )
         FROM Post p
         LEFT JOIN Bird b ON p.birdId = b.id
+        WHERE p.enabled = TRUE
+        AND p.restricted = FALSE
         ORDER BY p.id DESC
     """)
     List<PostView> postsJoinBird();
