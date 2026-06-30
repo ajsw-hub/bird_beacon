@@ -111,8 +111,8 @@ public class BirdpediaController {
 
                     expression1.add("const bird_" + bird.getId() + "_hover"+ " = document.getElementById(\"bird_" + bird.getId() + "\");" );
                     expression2.add("const bird_" + bird.getId() + "_popup"+ " = document.getElementById(\"bird_" + bird.getId() + "_popup\");" );
-                    expression3.add("bird_" + bird.getId() + "_popup" +".addEventListener" +"('mouseenter',() => {" + "bird_" + bird.getId() + "_popup" +".style.display = 'block'; });");
-                    expression4.add("bird_" + bird.getId() + "_popup" +".addEventListener" +"('mouseleave',() => {" + "bird_" + bird.getId() + "_popup" +".style.display = 'none'; });");
+                    expression3.add("bird_" + bird.getId() + "_hover" +".addEventListener" +"('mouseenter',() => {" + "bird_" + bird.getId() + "_popup" +".style.display = 'block'; });");
+                    expression4.add("bird_" + bird.getId() + "_hover" +".addEventListener" +"('mouseleave',() => {" + "bird_" + bird.getId() + "_popup" +".style.display = 'none'; });");
 
 
                 }
@@ -124,12 +124,12 @@ public class BirdpediaController {
 
         }
 
+        List<Integer> countOfBirdsList = IntStream.range(0,countOfBirds).boxed().toList();
 
-
-        System.out.println(expression1.get(1));
-        System.out.println(expression2.get(1));
-        System.out.println(expression3.get(1));
-        System.out.println(expression4.get(1));
+        System.out.println(expression1.get(2));
+        System.out.println(expression2.get(2));
+        System.out.println(expression3.get(2));
+        System.out.println(expression4.get(2));
 
         String bird_81 = "bird_81";
         String bird_22 = "bird_22";
@@ -140,6 +140,14 @@ public class BirdpediaController {
 
         birdpedia.addObject("bird_81", bird_81);
         birdpedia.addObject("bird_22", bird_22);
+
+        birdpedia.addObject("countOfBirdsList",countOfBirdsList);
+        birdpedia.addObject("expression1",expression1);
+        birdpedia.addObject("expression2",expression2);
+        birdpedia.addObject("expression3",expression3);
+        birdpedia.addObject("expression4",expression4);
+
+
 
         birdpedia.addObject("htmlBirdIds", htmlBirdIds);
 
