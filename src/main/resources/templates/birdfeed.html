@@ -33,13 +33,17 @@
 <!-- Post form -->
 <div class="post-form">
     <form action = "#" th:action="@{/new_sighting}" th:object="${post}" method = "post" enctype="multipart/form-data">
-<!-- Bird search box -->
-        <label>Bird</label>
+
+        <!-- Bird search box -->
+        <label>Bird</label></br>
         <div id="bird-search-wrapper">
-            <input type="text" id="bird-search" placeholder="Search birds..." autocomplete="off">
+            <label> Search:</label><input type="text" id="bird-search" placeholder="Search birds..." autocomplete="off">
             <div id="suggestions"></div>
         </div><br/>
-<!-- Unknown bird button feat  -->
+        <label>Selected Bird:</label>
+        <p id="selected-bird-label">No bird selceted</p>
+
+        <!-- Unknown bird button feat  -->
         <input type="hidden" th:field="*{birdId}" id="bird-id"/>
         <button type="button" id="unknown-bird">🐦 What's this bird?</button><br/>
 <!-- Content Box START-->
@@ -75,11 +79,14 @@
     </form>
 </div>
 <!--Post form END-->
+
 <!-- Welcome message and confirmation of signed in user -->
 <div sec:authorize="isAuthenticated()" id="greeting">
     Signed in as <span sec:authentication="principal.attributes['email']"></span>
 </div>
+
 <!-- Posts from posts db all user posts -->
+
 <div class="posts-on-birdfeed" th:each="post: ${listOfPosts}">
 <!-- If bird name is not null then post the bird name else return What is this bird-->
     <p th:text="${post.birdName != null ? post.birdName : 'What is this bird?'}"></p>
@@ -248,8 +255,13 @@
                         div.style.background = "white";
                         div.style.border = "1px solid #ddd";
                         div.addEventListener("click", () => {
-                            input.value = bird.name;
                             hiddenId.value = bird.id;
+                            // 2. Show selected bird in label (UI truth)
+                            document.getElementById("selected-bird-label").textContent =
+                            "🐦 " + bird.name;
+                            // 3. Clear search box (so user can't overwrite selection)
+                            input.value = "";
+                            // 4. Clear dropdown
                             suggestions.innerHTML = "";
                         });
                         suggestions.appendChild(div);
@@ -295,6 +307,9 @@
             birdWrapper.style.display = "block";
             birdInput.value = "";
             birdId.value = "";
+            suggestions.innerHTML = "";
+            document.getElementById("selected-bird-label").textContent =
+                "None selected";
             suggestions.innerHTML = "";
         });
                 // Hide error when user selects an image
