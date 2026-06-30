@@ -6,10 +6,7 @@ import com.makersacademy.acebook.repository.PostRepository;
 import com.makersacademy.acebook.repository.UserRepository;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -22,6 +19,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.time.LocalDateTime;
 
+import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 
 @RestController
@@ -70,11 +68,18 @@ public class PostController {
                 );
                 //simply setting the file name we created with uuid-original uploaded file name to the post under user_iamge column
                 post.setUser_img(filename);
-
-
             }
-
             postRepository.save(post);
         return new RedirectView("/");
+    }
+
+    //This controller is purely to set the enabled to false so the post will not be visible. (looks deleted to user)
+    @PostMapping("/posts/{id}/delete")
+    public RedirectView softDeletePost(@PathVariable Long id) {
+                Post post = postRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Post not found"));
+        post.setEnabled(FALSE);
+        postRepository.save(post);
+        return new RedirectView("/birdfeed");
     }
 }

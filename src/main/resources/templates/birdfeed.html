@@ -99,9 +99,16 @@
     <div class="mini-map"
          th:if="${post.latitude != null and post.longitude != null}"
          th:attr="data-lat=${post.latitude}, data-lng=${post.longitude}">
-<!-- Date of post posted -->
     </div>
+<!-- Date of post posted -->
     <p th:text="${#temporals.format(post.createdAt, 'dd-MM-yyyy HH:mm')}"></p>
+    <!-- delete button -->
+    <div th:if="${currentUser != null and post.posterId == currentUser.id}">
+        <form class="delete-post" th:action="@{/posts/{id}/delete(id = ${post.id})}" method="post"
+              onsubmit="return confirm('Are you sure you want to delete this post?');">
+            <button type="submit">🗑 Delete</button>
+        </form>
+    </div>
 </div>
 <!-- Leaflet map link required for map-->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>

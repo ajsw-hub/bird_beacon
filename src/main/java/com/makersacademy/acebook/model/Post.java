@@ -35,4 +35,8 @@ public class Post {
     private LocalDateTime createdAt;
     private boolean enabled;
     private boolean restricted;
+
+    public void rep() {
+
+    }
 }
