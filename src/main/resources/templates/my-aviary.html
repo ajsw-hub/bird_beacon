@@ -3,15 +3,13 @@
       xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5" >
 
     <head>
+        <link rel="stylesheet" th:href="@{/main.css}"/>
         <meta charset="UTF-8">
-        <title>Profile</title>
+        <title>My Aviary</title>
     </head>
 
     <body>
-    <a href="/logout">Logout</a>
-    <a href="/birdfeed">Bird Feed</a>
-    <a href="/my-aviary">Profile</a>
-    <a href="/birdpedia">Birdpedia</a>
+    <div th:replace="~{base :: header}"></div>
 
     <button><a href="/my-aviary/edit-page">Edit</a></button>
 

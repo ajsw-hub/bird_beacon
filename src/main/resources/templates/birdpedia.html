@@ -4,7 +4,7 @@
     <head>
         <meta charset="UTF-8">
         <title>Birdpedia</title>
-
+        <link rel="stylesheet" th:href="@{/main.css}"/>
         <style>
             .popupBox {
                 display: none;
@@ -21,11 +21,7 @@
     </head>
 
     <body>
-        <a href="/logout">Logout</a>
-        <a href="/birdfeed">Bird Feed</a>
-        <a href="/my-aviary">Profile</a>
-        <a href="/birdpedia">Birdpedia</a>
-        <h1 class="page_title">Birdpedia</h1>
+    <div th:replace="~{base :: header}"></div>
 
 
 
@@ -52,77 +48,67 @@
 
         </th:block>
 
-<!--        <th:block th:each = "bird : ${htmlBirdIds}">-->
-
-<!--            <script th:inline="javascript">-->
-
-<!--&lt;!&ndash;                document.querySelectorAll([['bird_' + ${bird}]]).forEach(bird => {&ndash;&gt;-->
-<!--&lt;!&ndash;                                bird.addEventListener('mouseenter', () => {&ndash;&gt;-->
-<!--&lt;!&ndash;                                            console.log(bird)} ) } )&ndash;&gt;-->
-
-<!--&lt;!&ndash;                const [['birdId_hover_'+${bird}]] = document.getElementById([['bird_' + ${bird}]]);&ndash;&gt;-->
-<!--&lt;!&ndash;                const [['birdId_popup_'+${bird}]] = document.getElementById([['bird_' + ${bird} + '_popup']]);&ndash;&gt;-->
-
-<!--&lt;!&ndash;                [['birdId_hover_'+${bird}]].addEventListener('mouseenter',() => {[['birdId_popup_'+${bird}]].style.display = 'block'; });&ndash;&gt;-->
-<!--&lt;!&ndash;                [['birdId_hover_'+${bird}]].addEventListener('mouseleave',() => {[['birdId_popup_'+${bird}]].style.display = 'none';});&ndash;&gt;-->
-<!--            </script>-->
-<!--        </th:block>-->
-
-
         <script th:inline="javascript">
 
-                            const popupBox = document.querySelector(".popupBox");
+            const elementToHover = document.getElementById([[${bird_81}]]);
+            const elementToPopup = document.getElementById([[${bird_81}+'_popup']]);
 
-                            document.querySelectorAll(".Gerald").forEach(bird => {
-                                            bird.addEventListener('mouseenter', () => {
+            elementToHover.addEventListener('mouseenter',() => {elementToPopup.style.display = 'block'; });
+            elementToHover.addEventListener('mouseleave',() => {elementToPopup.style.display = 'none';});
 
-                                                        popupBox.style.display = 'block';
+        </script>
 
-<!--                                                        popupBox.textContent = bird.dataset.name;-->
-<!--                                                        popupBox.img.src = bird.dataset.img;-->
+        <script th:inline="javascript">
+            const elementToHover22 = document.getElementById([[${bird_22}]]);
+            const elementToPopup22 = document.getElementById([[${bird_22}+'_popup']]);
 
-                                                        popupBox.innerHTML = `
-                                                            <h3>${bird.dataset.name}</h3>
-                                                            <img src = "${bird.dataset.img}" width = "150px">
-                                                            <p><b>Scientific Name:</b></p>
-                                                            <p>${bird.dataset.sciname}</p>
-                                                            <p><b>Family Name:</b></p>
-                                                            <p>${bird.dataset.family}</p>
-                                                            <p><b>Conservation Status: </b></p>
-                                                            <p>${bird.dataset.status}</p>`
-
-
-                                                        } ) } )
-
+            elementToHover22.addEventListener('mouseenter',() => {elementToPopup22.style.display = 'block'; });
+            elementToHover22.addEventListener('mouseleave',() => {elementToPopup22.style.display = 'none';});
 
         </script>
 
 
-<!--        <script th:inline="javascript">-->
 
-<!--            const elementToHover = document.getElementById([[${bird_81}]]);-->
-<!--            const elementToPopup = document.getElementById([[${bird_81}+'_popup']]);-->
+    <th:block th:each = "bird : ${htmlBirdIds}">
 
-<!--            elementToHover.addEventListener('mouseenter',() => {elementToPopup.style.display = 'block'; });-->
-<!--            elementToHover.addEventListener('mouseleave',() => {elementToPopup.style.display = 'none';});-->
+        <script th:inline="javascript">
 
-<!--        </script>-->
+            const [['birdId_hover_'+${bird}]] = document.getElementById([['bird_' + ${bird}]]);
+            const [['birdId_popup_'+${bird}]] = document.getElementById([['bird_' + ${bird} + '_popup']]);
 
-<!--        <script th:inline="javascript">-->
-<!--            const elementToHover22 = document.getElementById([[${bird_22}]]);-->
-<!--            const elementToPopup22 = document.getElementById([[${bird_22}+'_popup']]);-->
-
-<!--            elementToHover22.addEventListener('mouseenter',() => {elementToPopup22.style.display = 'block'; });-->
-<!--            elementToHover22.addEventListener('mouseleave',() => {elementToPopup22.style.display = 'none';});-->
-
-<!--        </script>-->
-
-<!--        <script th:inline="javascript">-->
-
-<!--        </script>-->
+            [['birdId_hover_'+${bird}]].addEventListener('mouseenter',() => {[['birdId_popup_'+${bird}]].style.display = 'block'; });
+            [['birdId_hover_'+${bird}]].addEventListener('mouseleave',() => {[['birdId_popup_'+${bird}]].style.display = 'none';});
+        </script>
+    </th:block>
 
 
+<!--            <script th:inline="javascript">-->
 
+<!--                                const popupBox = document.querySelector(".popupBox");-->
+
+<!--                                document.querySelectorAll(".Gerald").forEach(bird => {-->
+<!--                                                bird.addEventListener('mouseenter', () => {-->
+
+<!--                                                            popupBox.style.display = 'block';-->
+
+<!--    &lt;!&ndash;                                                        popupBox.textContent = bird.dataset.name;&ndash;&gt;-->
+<!--    &lt;!&ndash;                                                        popupBox.img.src = bird.dataset.img;&ndash;&gt;-->
+
+<!--                                                            popupBox.innerHTML = `-->
+<!--                                                                <h3>${bird.dataset.name}</h3>-->
+<!--                                                                <img src = "${bird.dataset.img}" width = "150px">-->
+<!--                                                                <p><b>Scientific Name:</b></p>-->
+<!--                                                                <p>${bird.dataset.sciname}</p>-->
+<!--                                                                <p><b>Family Name:</b></p>-->
+<!--                                                                <p>${bird.dataset.family}</p>-->
+<!--                                                                <p><b>Conservation Status: </b></p>-->
+<!--                                                                <p>${bird.dataset.status}</p>`-->
+
+
+<!--                                                            } ) } )-->
+
+
+<!--            </script>-->
 
 
 

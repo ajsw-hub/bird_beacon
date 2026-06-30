@@ -1,15 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
-    <head>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5" >
+    <head lang="en">
+        <link rel="stylesheet" th:href="@{/main.css}"/>
         <meta charset="UTF-8">
         <title>Unable to Find Bird</title>
     </head>
     <body>
 
-        <a href="/logout">Logout</a>
-        <a href="/birdfeed">Bird Feed</a>
-        <a href="/profile">Profile</a>
-        <a href="/birdpedia">Birdpedia</a>
+        <div th:replace="~{base :: header}"></div>
 
         <h1>Where bird? - No Bird Found</h1>
         <p>To be padded out in future ticket</p>

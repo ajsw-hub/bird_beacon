@@ -8,3 +8,11 @@
     text-align: left;
     margin-bottom: 0.5rem;;
 }
+
+.nav-button{
+
+    padding: 10px;
+    background: #87e082;
+    border-radius: 15px
+    colour: black;
+}

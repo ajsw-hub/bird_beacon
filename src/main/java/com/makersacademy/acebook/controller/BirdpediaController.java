@@ -170,7 +170,10 @@ public class BirdpediaController {
         try {
             chosenBird = birdRepository.findById((Long.valueOf(birdId)));
         } catch (Exception e) {
-            if (birdId.toLowerCase().contains("drop") || birdId.toLowerCase().contains("delete") || birdId.toLowerCase().contains("insert") || birdId.toLowerCase().contains("update")){
+            if (birdId.toLowerCase().contains("drop") ||
+                    birdId.toLowerCase().contains("delete") ||
+                    birdId.toLowerCase().contains("insert") ||
+                    birdId.toLowerCase().contains("update")){
                 return new ModelAndView("/sql");
             }
             birdId = birdId.replaceAll("-", " ");

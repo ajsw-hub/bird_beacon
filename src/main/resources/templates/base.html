@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Caw</title>
+
+    <link rel="stylesheet" th:href="@{/main.css}"/>
+</head>
+
+    <body>
+    <nav th:fragment="header">
+
+            <a href="/logout" class = "nav-button">Logout</a>
+            <a href="/birdfeed" class = "nav-button">Birdfeed</a>
+            <a href="/my-aviary" class = "nav-button">Profile</a>
+            <a href="/birdpedia" class = "nav-button">Birdpedia</a>
+
+
+
+    </nav>
+
+    </body>
+</html>

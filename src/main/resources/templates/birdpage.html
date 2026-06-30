@@ -1,14 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
-    <head>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5" >
+    <head lang="en">
+        <link rel="stylesheet" th:href="@{/main.css}"/>
         <meta charset="UTF-8">
         <title th:text = "${chosenBird.getName()}"></title>
     </head>
     <body>
-    <a href="/logout">Logout</a>
-    <a href="/birdfeed">Bird Feed</a>
-    <a href="/my-aviary">Profile</a>
-    <a href="/birdpedia">Birdpedia</a>
+    <div th:replace="~{base :: header}"></div>
 
     <h2 th:text = "${chosenBird.getName()} "></h2>
     <p th:text = "'Scientific Name: ' + ${chosenBird.getSciname()}"></p>
