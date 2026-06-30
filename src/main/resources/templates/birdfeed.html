@@ -47,7 +47,10 @@
         <button type="button" id="current-location"> 📍 Use My Current Location</button>
 <!-- Uploading a pic -->
         <label>Use your own picture
-            <input class="user-img" type="file" name="user_bird" accept="image/*"/>
+            <input class="user-img"
+                   type="file"
+                   name="user_bird"
+                   accept=".jpg,.jpeg,.png,.heic,image/jpeg,image/png,image/heic"/>
         </label><br/>
 <!-- Error message for missing immage for whats this bird -->
         <p id="image-error" style="color:red; display:none;">
@@ -197,25 +200,36 @@
 
 </script>
 <!--    This Java Script is to prevent over 10mb uploads and also limits to pic file only-->
+
 <script>
     document.querySelector("input[name='user_bird']").addEventListener("change", function () {
-    const file = this.files[0];
-    if (!file) return;
-    // Only allow images
-    if (!file.type.startsWith("image/")) {
-        alert("Only image files are allowed.");
-        this.value = "";
-        return;
-    }
-    const maxSize = 10 * 1024 * 1024;
-    if (file.size > maxSize) {
-        alert("Image is too large! Max size is 10MB.");
-        this.value = "";
-    }
-});
-
+        const file = this.files[0];
+        if (!file) return;
+        // Allowed MIME types (what browser reports)
+        const allowedTypes = [
+            "image/jpeg",
+            "image/png",
+            "image/heic"
+        ];
+        // Allowed extensions fallback (some browsers are inconsistent with HEIC)
+        const allowedExtensions = [".jpg", ".jpeg", ".png", ".heic"];
+        const fileName = file.name.toLowerCase();
+        const hasValidExtension = allowedExtensions.some(ext => fileName.endsWith(ext));
+        // 1. Type check
+        if (!allowedTypes.includes(file.type) && !hasValidExtension) {
+            alert("Only JPG, JPEG, PNG, or HEIC images are allowed.");
+            this.value = "";
+            return;
+        }
+        // 2. File size check (10MB)
+        const maxSize = 10 * 1024 * 1024;
+        if (file.size > maxSize) {
+            alert("Image is too large! Max size is 10MB.");
+            this.value = "";
+            return;
+        }
+    });
 </script>
-
 <!--    This iss the Java Script for the bird search feature making it dissapear adn reappear if button is clicked-->
 <script>
     const input = document.getElementById("bird-search");
