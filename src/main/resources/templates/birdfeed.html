@@ -349,7 +349,17 @@
         }
     });
 </script>
-
+<!--empty space validation with JS-->
+<script>
+    document.querySelector("form").addEventListener("submit", function (e) {
+        const contentInput = document.querySelector("input[name='content']");
+        contentInput.value = contentInput.value.trim();
+        if (contentInput.value.length === 0) {
+            e.preventDefault();
+            alert("Please enter some content (not just spaces).");
+        }
+    });
+</script>
 
 </body>
 </html>
