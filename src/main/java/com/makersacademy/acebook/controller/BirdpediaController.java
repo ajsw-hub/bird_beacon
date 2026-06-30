@@ -10,9 +10,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
+import org.w3c.dom.ranges.Range;
 
 import javax.swing.text.html.Option;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @RestController
 public class BirdpediaController {
@@ -24,6 +27,7 @@ public class BirdpediaController {
     public ModelAndView birdpedia(HttpSession session){
 
         Iterable<Bird> allBirds = birdRepository.findAllOrderByName();
+        Integer countOfBirds = birdRepository.countBirds();
 
         ModelAndView birdpedia = new ModelAndView("birdpedia");
 
@@ -61,15 +65,55 @@ public class BirdpediaController {
 
         List<List<Bird>> alphabeticalBirdsList = new ArrayList<>();
 
+        ArrayList<Long> htmlBirdIds = new ArrayList<Long>();
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+        ArrayList<String> expression1 = new ArrayList<String>();
+        ArrayList<String> expression2 = new ArrayList<String>();
+        ArrayList<String> expression3 = new ArrayList<String>();
+        ArrayList<String> expression4 = new ArrayList<String>();
+
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
         for(String letter : alphabet){
 
             List<Bird> listofBirds = new ArrayList<>();
 
             for(Bird bird : allBirds){
 
+
                 if(Objects.equals(bird.getName().charAt(0), letter.charAt(0))){
 
                     listofBirds.add(bird);
+                    htmlBirdIds.add((Long) bird.getId());
+
+                    expression1.add("const bird_" + bird.getId() + "_hover"+ " = document.getElementById(\"bird_" + bird.getId() + "\");" );
+                    expression2.add("const bird_" + bird.getId() + "_popup"+ " = document.getElementById(\"bird_" + bird.getId() + "_popup\");" );
+                    expression3.add("bird_" + bird.getId() + "_hover" +".addEventListener" +"('mouseenter',() => {" + "bird_" + bird.getId() + "_popup" +".style.display = 'block'; });");
+                    expression4.add("bird_" + bird.getId() + "_hover" +".addEventListener" +"('mouseleave',() => {" + "bird_" + bird.getId() + "_popup" +".style.display = 'none'; });");
+
 
                 }
 
@@ -80,9 +124,32 @@ public class BirdpediaController {
 
         }
 
+        List<Integer> countOfBirdsList = IntStream.range(0,countOfBirds).boxed().toList();
+
+        System.out.println(expression1.get(2));
+        System.out.println(expression2.get(2));
+        System.out.println(expression3.get(2));
+        System.out.println(expression4.get(2));
+
+        String bird_81 = "bird_81";
+        String bird_22 = "bird_22";
+
         birdpedia.addObject("allBirds", allBirds);
         birdpedia.addObject("alphabet", alphabet);
         birdpedia.addObject("alphabeticalBirdsList", alphabeticalBirdsList);
+
+        birdpedia.addObject("bird_81", bird_81);
+        birdpedia.addObject("bird_22", bird_22);
+
+        birdpedia.addObject("countOfBirdsList",countOfBirdsList);
+        birdpedia.addObject("expression1",expression1);
+        birdpedia.addObject("expression2",expression2);
+        birdpedia.addObject("expression3",expression3);
+        birdpedia.addObject("expression4",expression4);
+
+
+
+        birdpedia.addObject("htmlBirdIds", htmlBirdIds);
 
 
 

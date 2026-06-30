@@ -16,5 +16,11 @@ public interface BirdRepository extends CrudRepository<Bird, Long> {
     List<Bird> findAllOrderByName();
 
 
+    @Query(
+            value = "SELECT COUNT(id) from birds;",
+            nativeQuery = true
+    )
+    Integer countBirds();
+
     Optional<Bird> findByName(String name);
 }
