@@ -22,7 +22,9 @@ public interface PostRepository extends CrudRepository<Post, Long> {
             b.name,
             b.images,
             p.dateOfSighting,
-            p.createdAt
+            p.createdAt,
+            p.enabled,
+            p.restricted
         )
         FROM Post p
         LEFT JOIN Bird b ON p.birdId = b.id

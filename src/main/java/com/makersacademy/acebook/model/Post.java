@@ -33,5 +33,6 @@ public class Post {
     @Column(name = "date_of_sighting")
     private LocalDate dateOfSighting;
     private LocalDateTime createdAt;
-
+    private boolean enabled;
+    private boolean restricted;
 }

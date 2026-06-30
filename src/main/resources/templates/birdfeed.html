@@ -6,98 +6,106 @@
     <title>Birdfeed</title>
     <link rel="stylesheet" href="/main.css" />
 
-    <!--        CSS for mini map can be moved to css file needed it here for build-->
-    <style>
-        .mini-map {
-            height: 100px;
-            width: 500px;
-            transition: all 0.3s ease;
-        }
-        .mini-map.expanded {
-            height: 300px;
-            width: 500px;
-        }
-    </style>
+    <!-- Umut: CSS for mini map can be moved to CSS file needed it here for build-->
+<!--    <style>-->
+<!--        .mini-map {-->
+<!--            height: 100px;-->
+<!--            width: 500px;-->
+<!--            transition: all 0.3s ease;-->
+<!--        }-->
+<!--        .mini-map.expanded {-->
+<!--            height: 300px;-->
+<!--            width: 500px;-->
+<!--        }-->
+<!--    </style>-->
+    <!-- End of CSS for mini map    -->
+
 </head>
+
 <body>
+<!--Navigation buttons to different pages-->
 <a href="/logout">Logout</a>
 <a href="/birdfeed">Bird Feed</a>
 <a href="/profile">Profile</a>
-<h1>🦩 I Like Birds - Birdfeed 🦩</h1>
+<!--Navigation buttons to different pages-->
 
+<h1>🦩 I Like Birds - Birdfeed 🦩</h1>
+<!-- Post form -->
 <div class="post-form">
     <form action = "#" th:action="@{/new_sighting}" th:object="${post}" method = "post" enctype="multipart/form-data">
-
+<!-- Bird search box -->
         <label>Bird</label>
-
         <div id="bird-search-wrapper">
             <input type="text" id="bird-search" placeholder="Search birds..." autocomplete="off">
             <div id="suggestions"></div>
         </div><br/>
+<!-- Unknown bird button feat  -->
         <input type="hidden" th:field="*{birdId}" id="bird-id"/>
-
         <button type="button" id="unknown-bird">🐦 What's this bird?</button><br/>
+<!-- Content Box START-->
         <label>Content</label></br>
         <input type="text" th:field="*{content}" minlength = "3" required placeholder="Your space to share your thoughts"/><br/>
-
+<!-- Longitude and Latitude boxes hidden for Map coordinates -->
         <input type="hidden" th:field="*{latitude}" id="lat"/><br/>
         <input type="hidden" th:field="*{longitude}" id="lng"/><br/>
-        <!--        this is where the map shows-->
+<!-- This is where the map shows-->
         <div id="map" style="height: 300px; width: 500px; margin-bottom: 10px;"></div>
-        <button type="button" id="current-location">
-            📍 Use My Current Location
-        </button>
         <p>Click on the map to set location 📍</p>
-
-        <label>
-            Use your own picture
-            <input
-                    class="user-img"
-                    type="file"
-                    name="user_bird"
-                    accept="image/*"/>
+<!-- Current location button -->
+        <button type="button" id="current-location"> 📍 Use My Current Location</button>
+<!-- Uploading a pic -->
+        <label>Use your own picture
+            <input class="user-img" type="file" name="user_bird" accept="image/*"/>
         </label><br/>
-
+<!-- Error message for missing immage for whats this bird -->
         <p id="image-error" style="color:red; display:none;">
             You must upload a picture when selecting "What is this bird?"
         </p>
+<!-- Date of sighting -->
         <label>Date of sighting</label><br/>
         <input type="date" th:field="*{dateOfSighting}" required/><br/>
+<!-- Submit and reset buttons-->
         <input type="submit">
         <input type="reset" value="Reset"/>
+<!-- Private slider -->
+        <label class="private-switch">
+            <input type="checkbox" th:field="*{restricted}">
+            <span class="slider round"></span>
+        </label>
     </form>
 </div>
-
+<!--Post form END-->
+<!-- Welcome message and confirmation of signed in user -->
 <div sec:authorize="isAuthenticated()" id="greeting">
     Signed in as <span sec:authentication="principal.attributes['email']"></span>
 </div>
-
+<!-- Posts from posts db all user posts -->
 <div class="posts-on-birdfeed" th:each="post: ${listOfPosts}">
-
+<!-- If bird name is not null then post the bird name else return What is this bird-->
     <p th:text="${post.birdName != null ? post.birdName : 'What is this bird?'}"></p>
+<!-- Date of post -->
     <p th:text="'Seen on: ' + ${post.dateOfSighting}"></p>
+<!-- if user has uploaded image use that as priority -->
     <img th:if="${post.user_img != null}"
          th:src="@{'/postimg/' + ${post.user_img}}"
          width="500" height="500"/>
-
+<!-- If user has not uploaded an immage use url for image in bird table -->
     <img th:if="${post.user_img == null and post.birdImage != null}"
          th:src="${post.birdImage}"
          width="500" height="500"/>
-
+<!-- Post content text -->
     <p th:text="${post.content}"></p>
-
+<!-- mini map below post -->
     <div class="mini-map"
          th:if="${post.latitude != null and post.longitude != null}"
          th:attr="data-lat=${post.latitude}, data-lng=${post.longitude}">
+<!-- Date of post posted -->
     </div>
     <p th:text="${#temporals.format(post.createdAt, 'dd-MM-yyyy HH:mm')}"></p>
 </div>
-
-
-
-</div>
-
+<!-- Leaflet map link required for map-->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<!-- Java Script Global Variables -->
 <script>
     // GLOBAL STATE (shared across all scripts)
     let unknownMode = false;
@@ -186,7 +194,7 @@
     });
 
 </script>
-<!--    This Js is to prevent over 10mb uploads and also limits to pic file only-->
+<!--    This Java Script is to prevent over 10mb uploads and also limits to pic file only-->
 <script>
     document.querySelector("input[name='user_bird']").addEventListener("change", function () {
     const file = this.files[0];
@@ -206,7 +214,7 @@
 
 </script>
 
-<!--    This iss the js for the bird search feature-->
+<!--    This iss the Java Script for the bird search feature making it dissapear adn reappear if button is clicked-->
 <script>
     const input = document.getElementById("bird-search");
     const suggestions = document.getElementById("suggestions");

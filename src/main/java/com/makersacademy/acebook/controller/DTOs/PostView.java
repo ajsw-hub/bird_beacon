@@ -1,5 +1,6 @@
 package com.makersacademy.acebook.controller.DTOs;
 
+import jakarta.persistence.Column;
 import lombok.Getter;
 import org.springframework.cglib.core.Local;
 
@@ -21,6 +22,8 @@ public class PostView {
     private String birdImage;
     private LocalDate dateOfSighting;
     private LocalDateTime createdAt;
+    private boolean enabled;
+    private boolean restricted;
 
     public PostView(
             Long id,
@@ -33,7 +36,9 @@ public class PostView {
             String birdName,
             String birdImage,
             LocalDate dateOfSighting,
-            LocalDateTime createdAt
+            LocalDateTime createdAt,
+            boolean enabled,
+            boolean restricted
             ) {
 
         this.id = id;
@@ -47,5 +52,7 @@ public class PostView {
         this.birdImage = birdImage;
         this.dateOfSighting = dateOfSighting;
         this.createdAt = createdAt;
+        this.enabled = enabled;
+        this.restricted = restricted;
     }
 }
