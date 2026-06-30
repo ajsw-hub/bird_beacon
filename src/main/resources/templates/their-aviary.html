@@ -13,9 +13,15 @@
     <a href="/my-aviary">Profile</a>
     <a href="/birdpedia">Birdpedia</a>
 
-        <h1>Post History</h1>
+    <h3 th:text="${user.username}"></h3>
+    <img width="300" th:src="@{'/images/' + ${user.profilepicture}}"
+         class="user-img"
+         alt="Nav Profile Picture" />
 
-        <p th:each="post: ${userPosts}" th:text="${post.getContent()}"></p>
+
+    <h3>Post History</h3>
+
+<!--    <p th:each="post: ${userPosts}" th:text="${post.getContent()}"></p>-->
 
     </body>
 

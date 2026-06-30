@@ -8,7 +8,9 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
@@ -47,6 +49,44 @@ public class ProfileController {
         return modelAndView;
 
     }
+
+    @GetMapping("/their-aviary/{userId}")
+    public ModelAndView selectedUser(@PathVariable String userId) {
+
+        Optional<User> chosenUser;
+
+        try {
+            chosenUser = userRepository.findById(Long.valueOf(userId));
+        } catch(Exception e) {
+            if (userId.toLowerCase().contains("drop") ||
+                    userId.toLowerCase().contains("delete") ||
+                    userId.toLowerCase().contains("insert") ||
+                    userId.toLowerCase().contains("update")){
+                return new ModelAndView("/sql");
+            }
+            chosenUser = userRepository.findUserByUsername(userId);
+        }
+
+//        Optional userOptional = userRepository.findById(Long.valueOf(userId));
+        System.out.println("chosenUser: " + chosenUser);
+        if (chosenUser.isPresent()) {
+            User user = (User) chosenUser.get();
+
+
+            ModelAndView theirAviary = new ModelAndView("their-aviary");
+            theirAviary.addObject("user", user);
+
+            return theirAviary;
+        } else {
+            return new ModelAndView("/sql");
+        }
+
+
+
+
+    }
+
+
 
 
 }
