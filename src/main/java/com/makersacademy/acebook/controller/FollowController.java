@@ -22,7 +22,7 @@ public class FollowController {
     FollowRepository followRepository;
 
     @PostMapping("/follow/{followedUserId}")
-    public RedirectView create (HttpSession session, @PathVariable Long followedUserId){
+    public RedirectView follow(HttpSession session, @PathVariable Long followedUserId){
 
           String username = (String) session.getAttribute("username");
 
@@ -39,18 +39,17 @@ public class FollowController {
           return new RedirectView("/birdfeed");
     }
 
-//    @PostMapping("/unfollow")
-//    public RedirectView create (@ModelAttribute Post post, HttpSession session, @RequestParam String redirect){
-//
-////        String username = (String) session.getAttribute("username");
-////
-////        Optional<User> findingUser = userRepository.findUserByUsername(username);
-////        User currentUser = findingUser.get();
-////
-////        post.setPosterid(currentUser.getId());
-//
-////        postRepository.save(post);
-//
-//        return new RedirectView(redirect);
-//    }
+    @PostMapping("/unfollow/{followedUserId}")
+    public RedirectView unfollow(HttpSession session, @PathVariable Long followedUserId){
+
+        String username = (String) session.getAttribute("username");
+
+        Optional<User> findingUser = userRepository.findUserByUsername(username);
+        User loggedInUser = findingUser.get();
+        Long loggedInUserId = loggedInUser.getId();
+
+        followRepository.deleteByFolloweridAndFollowingid(loggedInUserId, followedUserId);
+
+        return new RedirectView("/birdfeed");
+    }
 }
