@@ -1,0 +1,10 @@
+CREATE TABLE follows (
+id BIGSERIAL PRIMARY KEY,
+followerId BIGINT NOT NULL,
+followingId BIGINT NOT NULL,
+
+UNIQUE (followerId, followingId),
+
+FOREIGN KEY (followerId) REFERENCES users(id) ON DELETE CASCADE,
+FOREIGN KEY (followingId) REFERENCES users(id) ON DELETE CASCADE
+);

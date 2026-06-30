@@ -37,18 +37,18 @@ public class FollowsController {
         return new RedirectView(redirect);
     }
 
-    @PostMapping("/unfollow")
-    public RedirectView create (@ModelAttribute Post post, HttpSession session, @RequestParam String redirect){
-
-//        String username = (String) session.getAttribute("username");
+//    @PostMapping("/unfollow")
+//    public RedirectView create (@ModelAttribute Post post, HttpSession session, @RequestParam String redirect){
 //
-//        Optional<User> findingUser = userRepository.findUserByUsername(username);
-//        User currentUser = findingUser.get();
+////        String username = (String) session.getAttribute("username");
+////
+////        Optional<User> findingUser = userRepository.findUserByUsername(username);
+////        User currentUser = findingUser.get();
+////
+////        post.setPosterid(currentUser.getId());
 //
-//        post.setPosterid(currentUser.getId());
-
-//        postRepository.save(post);
-
-        return new RedirectView(redirect);
-    }
+////        postRepository.save(post);
+//
+//        return new RedirectView(redirect);
+//    }
 }
