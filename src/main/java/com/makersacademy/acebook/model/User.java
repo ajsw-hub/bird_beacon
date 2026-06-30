@@ -4,10 +4,12 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 import static java.lang.Boolean.TRUE;
 
 @Entity
-@Table(name = "Users")
+@Table(name = "users")
 @NoArgsConstructor
 @Data
 
@@ -19,6 +21,12 @@ public class User {
     private String email;
     private Boolean enabled;
 
+    private String profilepicture;
+    private String bio;
+    private LocalDate dateofbirth;
+
+
+
     public User(String usenname) {
         this.username = username;
         this.enabled = TRUE;
@@ -28,6 +36,7 @@ public class User {
         this.username = username;
         this.email = email;
         this.enabled = TRUE;
+        this.profilepicture = "default-profile-pic.jpg";
 
     }
 }

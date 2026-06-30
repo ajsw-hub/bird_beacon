@@ -2,15 +2,10 @@ name: 💡 Bird Beacon Enhancement
 description: Template for reporting enhancement requests
 title: "Enhancement: "
 body:
-  - type: dropdown
-    id: version
+  - type: textarea
+    id: observed
     attributes:
-      label: Version
-      options:
-        - v1
-        - v2
-        - v3
-        - v4
+      label: Observed Behaviour
   - type: dropdown
     id: impact
     attributes:
