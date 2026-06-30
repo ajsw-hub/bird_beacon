@@ -8,8 +8,8 @@ import java.util.List;
 
 public interface FollowRepository extends CrudRepository<Follow, Long> {
 
-      void deleteByFollowerIdAndFollowingId(Long followerId, Long followingId);
-
+//      void deleteByFollowerIdAndFollowingId(Long followerId, Long followingId);
+//
       @Query(value= "SELECT followingid FROM follows WHERE followerid = :followerId", nativeQuery = true)
       List<Long> findFollowingIdsByFollowerId(Long followerId);
 
