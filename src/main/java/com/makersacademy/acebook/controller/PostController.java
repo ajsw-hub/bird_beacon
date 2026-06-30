@@ -29,6 +29,7 @@ public class PostController {
 
             Optional<User> findingUser = userRepository.findUserByUsername(username);
             User currentUser = findingUser.get();
+            System.out.println("currentUser: " + currentUser);
 
             post.setPosterid(currentUser.getId());
 

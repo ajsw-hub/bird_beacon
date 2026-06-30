@@ -4,10 +4,6 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
-
-import static java.lang.Boolean.TRUE;
-
 @Entity
 @Table(name = "follows")
 @NoArgsConstructor

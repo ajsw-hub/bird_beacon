@@ -10,7 +10,7 @@ public interface FollowsRepository extends CrudRepository<Post, Long> {
 
 //    public List<Post> findByPosteridOrderByIdDesc(Long userid);
 
-    
+
 
 
 }
