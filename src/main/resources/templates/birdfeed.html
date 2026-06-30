@@ -5,21 +5,6 @@
     <meta charset="UTF-8"/>
     <title>Birdfeed</title>
     <link rel="stylesheet" href="/main.css" />
-
-    <!-- Umut: CSS for mini map can be moved to CSS file needed it here for build-->
-<!--    <style>-->
-<!--        .mini-map {-->
-<!--            height: 100px;-->
-<!--            width: 500px;-->
-<!--            transition: all 0.3s ease;-->
-<!--        }-->
-<!--        .mini-map.expanded {-->
-<!--            height: 300px;-->
-<!--            width: 500px;-->
-<!--        }-->
-<!--    </style>-->
-    <!-- End of CSS for mini map    -->
-
 </head>
 
 <body>
@@ -41,7 +26,10 @@
             <div id="suggestions"></div>
         </div><br/>
         <label>Selected Bird:</label>
-        <p id="selected-bird-label">No bird selceted</p>
+        <p id="selected-bird-label">No bird selected</p>
+        <p id="bird-error" style="color:red; display:none;">
+            Please select a bird before submitting
+        </p>
 
         <!-- Unknown bird button feat  -->
         <input type="hidden" th:field="*{birdId}" id="bird-id"/>
@@ -292,6 +280,8 @@
                 suggestions.innerHTML = "";
                 birdInput.value = "What is this bird";
                 birdId.value = "";   // IMPORTANT: keep as empty string for Spring binding
+                document.getElementById("selected-bird-label").textContent =
+                    "🐦 What is this bird";
                 unknownRequiresImage = true;
             } else {
                 // EXIT UNKNOWN MODE
@@ -318,6 +308,8 @@
                 imageError.style.display = "none";
             }
         });
+        document.getElementById("dateOfSighting").max =
+            new Date().toISOString().split("T")[0];
     });
 </script>
 
@@ -325,6 +317,16 @@
     document.querySelector("form").addEventListener("submit", function (e) {
         const lat = document.getElementById("lat").value;
         const lng = document.getElementById("lng").value;
+        const birdId = document.getElementById("bird-id").value;
+
+        // 0. BIRD VALIDATION (NEW)
+        if (!unknownMode && !birdId) {
+            e.preventDefault();
+            document.getElementById("bird-error").style.display = "block";
+            return;
+        }
+        // hide error if valid
+        document.getElementById("bird-error").style.display = "none";
         // 1. LOCATION CHECK
         if (!lat || !lng) {
             e.preventDefault();

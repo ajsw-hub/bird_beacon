@@ -18,6 +18,8 @@ import java.nio.file.StandardCopyOption;
 import java.util.Optional;
 import java.util.UUID;
 import java.time.LocalDateTime;
+import java.time.LocalDate;
+
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
@@ -32,6 +34,10 @@ public class PostController {
 
     @PostMapping("/new_sighting")
     public RedirectView create (@ModelAttribute Post post, @RequestParam("user_bird") MultipartFile user_bird, HttpSession session) throws IOException {
+            // Don't allow future dates
+            if (post.getDateOfSighting().isAfter(LocalDate.now())) {
+                throw new IllegalArgumentException("Date of sighting cannot be in the future.");
+            }
             //get the username of the user from the current session
             String username = (String) session.getAttribute("username");
             //use that username to search the database in order to get the userid from db and assign results to findingUser
