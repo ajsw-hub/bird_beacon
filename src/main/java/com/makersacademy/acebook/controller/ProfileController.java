@@ -1,6 +1,8 @@
 package com.makersacademy.acebook.controller;
 
 import java.time.LocalDate;
+
+import com.makersacademy.acebook.controller.DTOs.PostView;
 import org.springframework.ui.Model;
 import com.makersacademy.acebook.model.Post;
 import com.makersacademy.acebook.model.User;
@@ -38,20 +40,29 @@ public class ProfileController {
 
     @GetMapping("/my-aviary")
     public ModelAndView showMyPostHistory(HttpSession session){
-
-        String username = session.getAttribute("username").toString();
-
-//        Optional<User> findingUser = userRepository.findUserByUsername(username);
-        User user = userRepository.findUserByUsername(username).get();
-
-        List<Post> userPosts = postRepository.findByPosterId(user.getId());
-
         ModelAndView modelAndView = new ModelAndView("/my-aviary");
 
-        modelAndView.addObject("userPosts", userPosts);
-        modelAndView.addObject("user", user);
-        modelAndView.addObject("post", new Post());
+        //Replacing the below to match birdfeed
+        //String username = session.getAttribute("username").toString();
+        String username = (String) session.getAttribute("username");
 
+        //User user = userRepository.findUserByUsername(username).get();
+        User currentUser = userRepository.findUserByUsername(username)
+                .orElse(null);
+        //Replacing the below to match birdfeed
+        //List<Post> userPosts = postRepository.findByPosterId(user.getId());
+        List<PostView> listOfPosts = postRepository.postsJoinBirdForUser(currentUser.getId());
+
+        //Taking the original code out to replace with above list<post>
+
+        //Replacing the below to match birdfeed
+        //modelAndView.addObject("userPosts", userPosts);
+        //modelAndView.addObject("user", user);
+        //modelAndView.addObject("post", new Post());
+        modelAndView.addObject("listOfPosts", listOfPosts);
+        modelAndView.addObject("post", new Post());
+        modelAndView.addObject("currentUser", currentUser);
+        modelAndView.addObject("user", currentUser);
         return modelAndView;
     }
 

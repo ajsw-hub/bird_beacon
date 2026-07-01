@@ -5,6 +5,7 @@
     <head>
         <meta charset="UTF-8">
         <title>Profile</title>
+        <link rel="stylesheet" href="/main.css" />
     </head>
 
     <body>
@@ -29,15 +30,393 @@
         <!--            <span th:text="${user.dateofbirth}"></span>-->
     </p>
 
-        <form action="#" th:action="@{/new_sighting}" th:object="${post}" method="post" >
-            <input type="text" th:field="*{content}" minlength = "3" required/>
+<!--    THIS IS THE NEW CODE BELOW AND CAN BE REMOVED ALL THE WAY UP TO THE NEXT COMMENT OUT LINE -->
+    <!-- Post form -->
+    <div class="post-form">
+        <form action = "#" th:action="@{/new_sighting}" th:object="${post}" method = "post" enctype="multipart/form-data">
+
+            <!-- Bird search box -->
+            <label>Bird</label></br>
+            <div id="bird-search-wrapper">
+                <label> Search:</label><input type="text" id="bird-search" placeholder="Search birds..." autocomplete="off">
+                <div id="suggestions"></div>
+            </div><br/>
+            <label>Selected Bird:</label>
+            <p id="selected-bird-label">No bird selected</p>
+            <p id="bird-error" style="color:red; display:none;">
+                Please select a bird before submitting
+            </p>
+
+            <!-- Unknown bird button feat  -->
+            <input type="hidden" th:field="*{birdId}" id="bird-id"/>
+            <button type="button" id="unknown-bird">🐦 What's this bird?</button><br/>
+            <!-- Content Box START-->
+            <label>Content</label></br>
+            <input type="text" th:field="*{content}" minlength = "3" required placeholder="Your space to share your thoughts"/><br/>
+            <!-- Longitude and Latitude boxes hidden for Map coordinates -->
+            <input type="hidden" th:field="*{latitude}" id="lat"/><br/>
+            <input type="hidden" th:field="*{longitude}" id="lng"/><br/>
+            <!-- This is where the map shows-->
+            <div id="map" style="height: 300px; width: 500px; margin-bottom: 10px;"></div>
+            <p>Click on the map to set location 📍</p>
+            <!-- Current location button -->
+            <button type="button" id="current-location"> 📍 Use My Current Location</button>
+            <!-- Uploading a pic -->
+            <label>Use your own picture
+                <input class="user-img"
+                       type="file"
+                       name="user_bird"
+                       accept=".jpg,.jpeg,.png,.heic,image/jpeg,image/png,image/heic"/>
+            </label><br/>
+            <!-- Error message for missing immage for whats this bird -->
+            <p id="image-error" style="color:red; display:none;">
+                You must upload a picture when selecting "What is this bird?"
+            </p>
+            <!-- Date of sighting -->
+            <label>Date of sighting</label><br/>
+            <input type="date" th:field="*{dateOfSighting}" required/><br/>
+            <!-- Submit and reset buttons-->
             <input type="hidden" name="redirect" value="/my-aviary" />
             <input type="submit">
+            <input type="reset" value="Reset"/>
+            <!-- Private slider -->
+            <label class="private-button-label">Private: </label>
+            <label class="private-switch">
+                <input type="checkbox" th:field="*{restricted}">
+                <span class="slider round"></span>
+            </label>
         </form>
+    </div>
+    <!--Post form END-->
 
-        <h3>Post History</h3>
 
-        <p th:each="post: ${userPosts}" th:text="${post.getContent()}"></p>
+
+    <!-- Posts from posts db all user posts -->
+    <div class="posts-on-birdfeed" th:each="post: ${listOfPosts}">
+
+        <!-- profile pic for poster -->
+        <img th:if="${post.profilepicture != null}"
+             th:src="@{'/profileimg/' + ${post.profilepicture}}"
+             class="post-profile-pic"/>
+        <!-- username for post -->
+        <p th:text="${post.username}"></p>
+        <!-- If bird name is not null then post the bird name else return What is this bird-->
+        <p th:text="${post.birdName != null ? post.birdName : 'What is this bird?'}"></p>
+        <!-- Date of post -->
+        <p th:text="'Seen on: ' + ${post.dateOfSighting}"></p>
+        <!-- if user has uploaded image use that as priority -->
+        <img th:if="${post.user_img != null}"
+             th:src="@{'/postimg/' + ${post.user_img}}"
+             width="500" height="500"/>
+        <!-- If user has not uploaded an immage use url for image in bird table -->
+        <img th:if="${post.user_img == null and post.birdImage != null}"
+             th:src="${post.birdImage}"
+             width="500" height="500"/>
+        <!-- Post content text -->
+        <p th:text="${post.content}"></p>
+        <!-- mini map below post -->
+        <div class="mini-map"
+             th:if="${post.latitude != null and post.longitude != null}"
+             th:attr="data-lat=${post.latitude}, data-lng=${post.longitude}">
+        </div>
+        <!-- Date of post posted -->
+        <p th:text="${#temporals.format(post.createdAt, 'dd-MM-yyyy HH:mm')}"></p>
+        <!-- delete button -->
+        <div th:if="${currentUser != null and post.posterId == currentUser.id}">
+
+            <form class="delete-post" th:action="@{/posts/{id}/delete(id = ${post.id})}" method="post"
+                  onsubmit="return confirm('Are you sure you want to delete this post?');">
+                <button type="submit">🗑 Delete</button>
+            </form>
+        </div>
+    </div>
+
+
+
+
+
+    <!-- Leaflet map link required for map-->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+    <!-- Java Script Global Variables -->
+    <script>
+        // GLOBAL STATE (shared across all scripts)
+        let unknownMode = false;
+        let unknownRequiresImage = false;
+    </script>
+    <!--MAP JAVA SCRIPT BITS-->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <script>
+        // 1. Create map (this links to your <div id="map">)
+            const map = L.map('map').setView([51.505, -0.09], 13);
+
+            // 2. Add OpenStreetMap tiles (this is the actual map visuals)
+            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19
+            }).addTo(map);
+
+            // 3. Marker variable (we reuse it so we don't create infinite markers)
+            let marker;
+
+            // 4. When user clicks map → update hidden inputs
+            map.on('click', function (e) {
+            const lat = e.latlng.lat;
+            const lng = e.latlng.lng;
+
+            // THIS is the important bridge to Spring Boot
+            document.getElementById("lat").value = lat;
+            document.getElementById("lng").value = lng;
+
+            // Move marker or create it
+            if (marker) {
+            marker.setLatLng(e.latlng);
+            } else {
+            marker = L.marker(e.latlng).addTo(map);
+            }
+            });
+            // -------------THIS SECTION IS THE MY LOCATION BUTTON JS----------------
+
+        // USER CLICKS "USE MY LOCATION"
+        // -----------------------------
+        const locationButton = document.getElementById("current-location");
+        locationButton.addEventListener("click", function () {
+            if (!navigator.geolocation) {
+                alert("Your browser does not support GPS.");
+                return;
+            }
+            navigator.geolocation.getCurrentPosition(function(position) {
+                const lat = position.coords.latitude;
+                const lng = position.coords.longitude;
+                document.getElementById("lat").value = lat;
+                document.getElementById("lng").value = lng;
+                if (marker) {
+                    marker.setLatLng([lat, lng]);
+                } else {
+                    marker = L.marker([lat, lng]).addTo(map);
+                }
+                map.setView([lat, lng], 15);
+            });
+        });
+    </script>
+
+    <!--This is the JS for the little maps in the actual post -->
+    <script>
+        document.querySelectorAll(".mini-map").forEach(function(el) {
+            const lat = parseFloat(el.dataset.lat);
+            const lng = parseFloat(el.dataset.lng);
+            const miniMap = L.map(el, {
+                zoomControl: false,
+                scrollWheelZoom: false,
+                dragging: false,
+                doubleClickZoom: false,
+                boxZoom: false
+            }).setView([lat, lng], 13);
+            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19
+            }).addTo(miniMap);
+            L.marker([lat, lng]).addTo(miniMap);
+
+            // click = expand
+            el.addEventListener("click", function () {
+                el.classList.toggle("expanded");
+                setTimeout(() => {
+                    miniMap.invalidateSize();
+                }, 200);
+            });
+        });
+
+    </script>
+    <!--    This Java Script is to prevent over 10mb uploads and also limits to pic file only-->
+
+    <script>
+        document.querySelector("input[name='user_bird']").addEventListener("change", function () {
+            const file = this.files[0];
+            if (!file) return;
+            // Allowed MIME types (what browser reports)
+            const allowedTypes = [
+                "image/jpeg",
+                "image/png",
+                "image/heic"
+            ];
+            // Allowed extensions fallback (some browsers are inconsistent with HEIC)
+            const allowedExtensions = [".jpg", ".jpeg", ".png", ".heic"];
+            const fileName = file.name.toLowerCase();
+            const hasValidExtension = allowedExtensions.some(ext => fileName.endsWith(ext));
+            // 1. Type check
+            if (!allowedTypes.includes(file.type) && !hasValidExtension) {
+                alert("Only JPG, JPEG, PNG, or HEIC images are allowed.");
+                this.value = "";
+                return;
+            }
+            // 2. File size check (10MB)
+            const maxSize = 10 * 1024 * 1024;
+            if (file.size > maxSize) {
+                alert("Image is too large! Max size is 10MB.");
+                this.value = "";
+                return;
+            }
+        });
+    </script>
+    <!--    This iss the Java Script for the bird search feature making it dissapear adn reappear if button is clicked-->
+    <script>
+        const input = document.getElementById("bird-search");
+        const suggestions = document.getElementById("suggestions");
+        const hiddenId = document.getElementById("bird-id");
+        let timeout;
+        input.addEventListener("input", function () {
+            clearTimeout(timeout);
+            const q = this.value;
+
+            if (q.length < 2) {
+                suggestions.innerHTML = "";
+                return;
+            }
+            timeout = setTimeout(() => {
+                fetch(`/birds/search?q=${encodeURIComponent(q)}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        suggestions.innerHTML = "";
+                        data.forEach(bird => {
+                            const div = document.createElement("div");
+                            div.textContent = bird.name;
+                            div.style.padding = "6px";
+                            div.style.cursor = "pointer";
+                            div.style.background = "white";
+                            div.style.border = "1px solid #ddd";
+                            div.addEventListener("click", () => {
+                                hiddenId.value = bird.id;
+                                // 2. Show selected bird in label (UI truth)
+                                document.getElementById("selected-bird-label").textContent =
+                                "🐦 " + bird.name;
+                                // 3. Clear search box (so user can't overwrite selection)
+                                input.value = "";
+                                // 4. Clear dropdown
+                                suggestions.innerHTML = "";
+                            });
+                            suggestions.appendChild(div);
+                        });
+                    });
+            }, 200);
+        });
+    </script>
+
+<!--Whats this bird button and behaviour -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const unknownBirdBtn = document.getElementById("unknown-bird");
+            const birdWrapper = document.getElementById("bird-search-wrapper");
+            const birdInput = document.getElementById("bird-search");
+            const suggestions = document.getElementById("suggestions");
+            const birdId = document.getElementById("bird-id");
+            const resetBtn = document.querySelector("input[type='reset']");
+            const imageInput = document.querySelector("input[name='user_bird']");
+            const imageError = document.getElementById("image-error");
+
+
+            unknownBirdBtn.addEventListener("click", function () {
+                unknownMode = !unknownMode;
+                if (unknownMode) {
+                    // ENTER UNKNOWN MODE
+                    birdWrapper.style.display = "none";
+                    suggestions.innerHTML = "";
+                    birdInput.value = "What is this bird";
+                    birdId.value = "";   // IMPORTANT: keep as empty string for Spring binding
+                    document.getElementById("selected-bird-label").textContent =
+                        "🐦 What is this bird";
+                    unknownRequiresImage = true;
+                } else {
+                    // EXIT UNKNOWN MODE
+                    birdWrapper.style.display = "block";
+                    birdInput.value = "";
+                    birdId.value = "";
+                    suggestions.innerHTML = "";
+                    unknownRequiresImage = false;
+                }
+            });
+            resetBtn.addEventListener("click", function () {
+                unknownMode = false;
+                birdWrapper.style.display = "block";
+                birdInput.value = "";
+                birdId.value = "";
+                suggestions.innerHTML = "";
+                document.getElementById("selected-bird-label").textContent =
+                    "None selected";
+                suggestions.innerHTML = "";
+            });
+                    // Hide error when user selects an image
+            imageInput.addEventListener("change", function () {
+                if (this.files.length > 0) {
+                    imageError.style.display = "none";
+                }
+            });
+            document.getElementById("dateOfSighting").max =
+                new Date().toISOString().split("T")[0];
+        });
+    </script>
+<!--Validation for post -->
+    <script>
+        document.querySelector("form").addEventListener("submit", function (e) {
+            const lat = document.getElementById("lat").value;
+            const lng = document.getElementById("lng").value;
+            const birdId = document.getElementById("bird-id").value;
+
+            // 0. BIRD VALIDATION (NEW)
+            if (!unknownMode && !birdId) {
+                e.preventDefault();
+                document.getElementById("bird-error").style.display = "block";
+                return;
+            }
+            // hide error if valid
+            document.getElementById("bird-error").style.display = "none";
+            // 1. LOCATION CHECK
+            if (!lat || !lng) {
+                e.preventDefault();
+                alert("Please select a location on the map 📍");
+                return;
+            }
+            // 2. IMAGE REQUIRED ONLY FOR UNKNOWN BIRD
+            if (unknownRequiresImage === true) {
+                const fileInput = document.querySelector("input[name='user_bird']");
+                const file = fileInput.files[0];
+                if (!file) {
+                    e.preventDefault();
+                    document.getElementById("image-error").style.display = "block";
+                    fileInput.scrollIntoView({
+                        behavior: "smooth",
+                        block: "center"
+                    });
+                    return;
+                }
+            }
+        });
+    </script>
+    <!--empty space validation with JS-->
+    <script>
+        document.querySelector("form").addEventListener("submit", function (e) {
+            const contentInput = document.querySelector("input[name='content']");
+            contentInput.value = contentInput.value.trim();
+            if (contentInput.value.length === 0) {
+                e.preventDefault();
+                alert("Please enter some content (not just spaces).");
+            }
+        });
+    </script>
+
+
+
+
+    <!--THIS BELOS IS THE OLD TEXT POSTING A POST REVERT IF NEEDED AND REMOVE ALL CODE ABOVE -->
+<!--    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@-->
+<!--        <form action="#" th:action="@{/new_sighting}" th:object="${post}" method="post" >-->
+<!--            <input type="text" th:field="*{content}" minlength = "3" required/>-->
+<!--            <input type="hidden" name="redirect" value="/my-aviary" />-->
+<!--            <input type="submit">-->
+<!--        </form>-->
+
+<!--        <h3>Post History</h3>-->
+
+<!--        <p th:each="post: ${userPosts}" th:text="${post.getContent()}"></p>-->
+<!--    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@-->
 
     </body>
 
