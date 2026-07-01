@@ -1,7 +1,9 @@
 package com.makersacademy.acebook.controller;
 
+import com.makersacademy.acebook.model.Follow;
 import com.makersacademy.acebook.model.Post;
 import com.makersacademy.acebook.model.User;
+import com.makersacademy.acebook.repository.FollowRepository;
 import com.makersacademy.acebook.repository.PostRepository;
 import com.makersacademy.acebook.repository.UserRepository;
 import jakarta.servlet.http.HttpSession;
@@ -27,6 +29,9 @@ public class ProfileController {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    FollowRepository followRepository;
+
     @GetMapping("/my-aviary")
     public ModelAndView showMyPostHistory(HttpSession session){
 
@@ -51,7 +56,8 @@ public class ProfileController {
     }
 
     @GetMapping("/their-aviary/{userId}")
-    public ModelAndView selectedUser(@PathVariable String userId) {
+    public ModelAndView selectedUser(@PathVariable String userId, HttpSession session) {
+
 
         Optional<User> chosenUser;
 
@@ -67,18 +73,32 @@ public class ProfileController {
             chosenUser = userRepository.findUserByUsername(userId);
         }
 
-//        Optional userOptional = userRepository.findById(Long.valueOf(userId));
-        System.out.println("chosenUser: " + chosenUser);
+        Boolean isFollowingBool;
+
         if (chosenUser.isPresent()) {
             User user = (User) chosenUser.get();
 
+            String username = session.getAttribute("username").toString();
+            User currentUser = userRepository.findUserByUsername(username).get();
+
+            if (user.getId() == currentUser.getId()) {
+                return new ModelAndView("redirect:/my-aviary");
+            }
+
+            Optional<Follow> isFollowing = followRepository.findAllByFolloweridAndFollowingid(currentUser.getId(), user.getId());
+            if (isFollowing.isPresent()) {
+                 isFollowingBool = true;
+            } else {
+                 isFollowingBool = false;
+            }
 
             ModelAndView theirAviary = new ModelAndView("their-aviary");
             theirAviary.addObject("user", user);
+            theirAviary.addObject("isFollowingBool", isFollowingBool);
 
             return theirAviary;
         } else {
-            return new ModelAndView("/sql");
+            return new ModelAndView("/userNotFound");
         }
 
 

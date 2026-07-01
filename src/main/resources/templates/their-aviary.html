@@ -18,6 +18,11 @@
          class="user-img"
          alt="Nav Profile Picture" />
 
+    <form th:action="@{/follow-unfollow/{followingId} (followingId = ${user.getId()})}" method="post">
+        <button type="submit" th:text="${isFollowingBool} ? 'Unfollow' : 'Follow'"></button>
+    </form>
+
+
 
     <h3>Post History</h3>
 
