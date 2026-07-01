@@ -66,7 +66,7 @@ public class ProfileController {
         return "edit-page";
     }
 
-    @PostMapping("/profile/edit-page")
+    @PostMapping("/my-aviary/edit-page")
     public RedirectView editUser(@ModelAttribute("user") User formUser,
                                  @RequestParam("imageFile") MultipartFile image,
                                  HttpSession session) throws IOException {
@@ -75,12 +75,12 @@ public class ProfileController {
         User currentUser = userRepository.findUserByUsername(username).get();
 
         if (formUser.getBio() != null && formUser.getBio().length() > 300) {
-            return new RedirectView("/profile/edit-page?error=bioLength");
+            return new RedirectView("/my-aviary/edit-page?error=bioLength");
         }
 
         if (formUser.getDateofbirth() != null &&
                 formUser.getDateofbirth().isAfter(LocalDate.now())) {
-            return new RedirectView("/profile/edit-page?error=dob");
+            return new RedirectView("/my-aviary/edit-page?error=dob");
         }
 
         currentUser.setBio(formUser.getBio());
@@ -100,7 +100,7 @@ public class ProfileController {
                             !contentType.equals("image/jpeg") &&
                             !contentType.equals("image/jpg"))) {
 
-                return new RedirectView("/profile/edit-page?error=invalidImage");
+                return new RedirectView("/my-aviary/edit-page?error=invalidImage");
             }
 
             String filename = System.currentTimeMillis() + "_" + image.getOriginalFilename();
@@ -118,6 +118,6 @@ public class ProfileController {
         userRepository.save(currentUser);
         session.setAttribute("user", currentUser);
 
-        return new RedirectView("/profile");
+        return new RedirectView("/my-aviary");
     }
 }
