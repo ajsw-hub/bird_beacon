@@ -87,7 +87,7 @@ public class ProfileController {
             currentUser.setDateofbirth(formUser.getDateofbirth());
         }
 
-        Path uploadDir = Paths.get("/profileimg");
+        Path uploadDir = Paths.get("uploads/profileimg");
         Files.createDirectories(uploadDir);
 
         if (!image.isEmpty()) {
