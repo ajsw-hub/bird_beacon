@@ -78,3 +78,22 @@ textarea {
     margin-bottom: 20px;
 }
 
+/* This is testing adding my css */
+ /* Profile picture styling */
+        .profile-picture {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-top: 8px;
+            display: block;
+        }
+
+        /* Upload instruction text */
+        .upload-instruction {
+            color: #3a4a2f;
+            font-family: "Georgia", serif;
+            font-size: 20px;
+            margin: 10px 0;
+
+        }
