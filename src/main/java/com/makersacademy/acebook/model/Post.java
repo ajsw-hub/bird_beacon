@@ -9,8 +9,6 @@ import lombok.Setter;
 @Data
 @Entity
 @Table(name="POSTS")
-@Getter
-@Setter
 @NoArgsConstructor
 
 public class Post {

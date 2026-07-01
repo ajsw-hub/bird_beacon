@@ -13,6 +13,7 @@ import static java.lang.Boolean.TRUE;
 @Table(name = "users")
 @NoArgsConstructor
 @Data
+
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,11 +28,13 @@ public class User {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate dateofbirth;
 
+
+
     public User(String usenname) {
         this.username = username;
         this.enabled = TRUE;
-    }
 
+    }
     public User(String username, String email) {
         this.username = username;
         this.email = email;

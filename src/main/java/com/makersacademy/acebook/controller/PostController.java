@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -22,7 +23,7 @@ public class PostController {
     UserRepository userRepository;
 
     @PostMapping("/new_sighting")
-    public RedirectView create (@ModelAttribute Post post, HttpSession session){
+    public RedirectView create (@ModelAttribute Post post, HttpSession session, @RequestParam String redirect){
 
             String username = (String) session.getAttribute("username");
 
@@ -33,6 +34,6 @@ public class PostController {
 
             postRepository.save(post);
 
-        return new RedirectView("/");
+        return new RedirectView(redirect);
     }
 }

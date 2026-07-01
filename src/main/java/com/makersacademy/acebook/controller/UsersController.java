@@ -24,8 +24,13 @@ public class UsersController {
                 .getAuthentication()
                 .getPrincipal();
 
+        System.out.println("PRINCIPAL: " + principal);
+
         String username = (String) principal.getAttributes().get("https://birdbeacon.com/username");
         String email = (String) principal.getAttributes().get("email");
+
+        System.out.println("username: " + username);
+        System.out.println("email: " + email);
 
         userRepository
                 .findUserByUsername(username)

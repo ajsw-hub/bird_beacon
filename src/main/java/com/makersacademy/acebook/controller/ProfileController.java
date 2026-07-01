@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -23,6 +25,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class ProfileController {
@@ -33,20 +36,29 @@ public class ProfileController {
     @Autowired
     UserRepository userRepository;
 
-    @GetMapping("/profile")
-    public ModelAndView showMyPostHistory(HttpSession session) {
+    @GetMapping("/my-aviary")
+    public ModelAndView showMyPostHistory(HttpSession session){
+
         String username = session.getAttribute("username").toString();
+
+//        Optional<User> findingUser = userRepository.findUserByUsername(username);
         User user = userRepository.findUserByUsername(username).get();
+
+//        User currentUser = user.get();
+        System.out.println("currentUser: " + user);
+
         List<Post> userPosts = postRepository.findByPosteridOrderByIdDesc(user.getId());
 
-        ModelAndView modelAndView = new ModelAndView("/profile");
+        ModelAndView modelAndView = new ModelAndView("/my-aviary");
+
         modelAndView.addObject("userPosts", userPosts);
         modelAndView.addObject("user", user);
+        modelAndView.addObject("post", new Post());
 
         return modelAndView;
     }
 
-    @GetMapping("/profile/edit-page")
+    @GetMapping("/my-aviary/edit-page")
     public String showMyEditPage(Model model, HttpSession session) {
         String username = session.getAttribute("username").toString();
         User user = userRepository.findUserByUsername(username).get();

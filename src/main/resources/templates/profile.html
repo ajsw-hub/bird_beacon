@@ -10,9 +10,8 @@
     <body>
     <a href="/logout">Logout</a>
     <a href="/birdfeed">Bird Feed</a>
-    <a href="/profile">Profile</a>
-
-    <button><a href="/profile/edit-page">Edit</a></button>
+    <a href="/my-aviary">Profile</a>
+    <a href="/birdpedia">Birdpedia</a>
 
     <p><strong>User details:</strong></p>
 
@@ -22,7 +21,7 @@
          alt="Nav Profile Picture"
              style="width:120px; height:120px; object-fit:cover; border-radius:8px;">
 
-        <h3>Post History</h3>
+        <h1>Post History</h1>
 
     <p th:each="post: ${userPosts}" th:text="${post.getContent()}"></p>
 
