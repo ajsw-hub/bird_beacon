@@ -20,6 +20,15 @@
          class="user-img"
          alt="Nav Profile Picture" />
 
+    <p> Bio:
+        <br><br>
+        <span th:text="${user.bio}"></span>
+        <br><br>
+        <!--            Date of Birth:-->
+        <!--            <br><br>-->
+        <!--            <span th:text="${user.dateofbirth}"></span>-->
+    </p>
+
         <form action="#" th:action="@{/new_sighting}" th:object="${post}" method="post" >
             <input type="text" th:field="*{content}" minlength = "3" required/>
             <input type="hidden" name="redirect" value="/my-aviary" />
