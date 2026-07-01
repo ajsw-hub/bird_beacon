@@ -6,12 +6,12 @@
     <title>Birdfeed</title>
     <link rel="stylesheet" href="/main.css" />
 </head>
-
 <body>
 <!--Navigation buttons to different pages-->
 <a href="/logout">Logout</a>
 <a href="/birdfeed">Bird Feed</a>
-<a href="/profile">Profile</a>
+<a class="nav-btn" href="/my-aviary">Profile</a>
+<a href="/birdpedia">Birdpedia</a>
 <!--Navigation buttons to different pages-->
 
 <h1>🦩 I Like Birds - Birdfeed 🦩</h1>
@@ -60,6 +60,7 @@
         <label>Date of sighting</label><br/>
         <input type="date" th:field="*{dateOfSighting}" required/><br/>
 <!-- Submit and reset buttons-->
+        <input type="hidden" name="redirect" value="/" />
         <input type="submit">
         <input type="reset" value="Reset"/>
 <!-- Private slider -->

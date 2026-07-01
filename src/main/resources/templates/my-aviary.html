@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5" >
+
+    <head>
+        <meta charset="UTF-8">
+        <title>Profile</title>
+    </head>
+
+    <body>
+    <a href="/logout">Logout</a>
+    <a href="/birdfeed">Bird Feed</a>
+    <a href="/my-aviary">Profile</a>
+    <a href="/birdpedia">Birdpedia</a>
+
+    <button><a href="/my-aviary/edit-page">Edit</a></button>
+
+        <h3 th:text="${user.username}"></h3>
+        <img width="300" th:src="@{'/images/' + ${user.profilepicture}}"
+         class="user-img"
+         alt="Nav Profile Picture" />
+
+    <p> Bio:
+        <br><br>
+        <span th:text="${user.bio}"></span>
+        <br><br>
+        <!--            Date of Birth:-->
+        <!--            <br><br>-->
+        <!--            <span th:text="${user.dateofbirth}"></span>-->
+    </p>
+
+        <form action="#" th:action="@{/new_sighting}" th:object="${post}" method="post" >
+            <input type="text" th:field="*{content}" minlength = "3" required/>
+            <input type="hidden" name="redirect" value="/my-aviary" />
+            <input type="submit">
+        </form>
+
+        <h3>Post History</h3>
+
+        <p th:each="post: ${userPosts}" th:text="${post.getContent()}"></p>
+
+    </body>
+
+</html>

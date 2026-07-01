@@ -13,8 +13,6 @@ import java.time.LocalDateTime;
 @Data
 @Entity
 @Table(name="POSTS")
-@Getter
-@Setter
 @NoArgsConstructor
 
 public class Post {

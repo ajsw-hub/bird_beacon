@@ -3,6 +3,9 @@ package com.makersacademy.acebook.model;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.time.LocalDate;
 
 import java.time.LocalDate;
 
@@ -23,6 +26,8 @@ public class User {
 
     private String profilepicture;
     private String bio;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate dateofbirth;
 
 
@@ -37,6 +42,5 @@ public class User {
         this.email = email;
         this.enabled = TRUE;
         this.profilepicture = "default-profile-pic.jpg";
-
     }
 }

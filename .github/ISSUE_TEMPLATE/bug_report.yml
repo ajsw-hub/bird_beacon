@@ -1,15 +1,10 @@
 name: 🦉 Bird Beacon Bug
 description: Template for reporting bugs
 body:
-  - type: dropdown
-    id: version
+  - type: textarea
+    id: branch
     attributes:
-      label: Version
-      options:
-        - v1
-        - v2
-        - v3
-        - v4
+      label: Branch Name
   - type: dropdown
     id: severity
     attributes:

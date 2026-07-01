@@ -36,7 +36,6 @@ public class BirdFeedController {
         birdFeed.addObject("currentUser", currentUser);
         return birdFeed;
     }
-
     @GetMapping("/")
     public RedirectView birdfeed() {
         return new RedirectView("/birdfeed");

@@ -6,6 +6,10 @@ import com.makersacademy.acebook.repository.PostRepository;
 import com.makersacademy.acebook.repository.UserRepository;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.view.RedirectView;
@@ -33,7 +37,7 @@ public class PostController {
     UserRepository userRepository;
 
     @PostMapping("/new_sighting")
-    public RedirectView create (@ModelAttribute Post post, @RequestParam("user_bird") MultipartFile user_bird, HttpSession session) throws IOException {
+    public RedirectView create (@ModelAttribute Post post, @RequestParam("user_bird") MultipartFile user_bird, @RequestParam String redirect, HttpSession session) throws IOException {
             // Don't allow future dates
             if (post.getDateOfSighting().isAfter(LocalDate.now())) {
                 throw new IllegalArgumentException("Date of sighting cannot be in the future.");
@@ -76,7 +80,8 @@ public class PostController {
                 post.setUser_img(filename);
             }
             postRepository.save(post);
-        return new RedirectView("/");
+
+        return new RedirectView(redirect);
     }
 
     //This controller is purely to set the enabled to false so the post will not be visible. (looks deleted to user)

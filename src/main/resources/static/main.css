@@ -1,11 +1,29 @@
 .posts-main {
     border-collapse: collapse;
 }
+
 .post-main {
     border: 1px solid #999;
     padding: 0.5rem;
     text-align: left;
-    margin-bottom: 0.5rem;;
+    margin-bottom: 0.5rem;
+}
+
+body {
+    background-color: #d9cbb3;
+    padding: 40px;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-image: url('/images/pigeons.jpg');
+    background-size: cover;
+    background-position: center;
+    opacity: 0.15; /* controls faintness */
+    pointer-events: none;
+    z-index: -1;
 }
 .private-switch {
   position: relative;
@@ -78,3 +96,74 @@
  object-fit: cover;
  border: 2px solid #ddd;
 }
+
+.page-container {
+    background-color: #e8f2e4;
+    padding: 40px;
+    border-radius: 12px;
+    border: 2px solid #c7b299;
+    min-height: calc(100vh - 80px);
+}
+
+.page-title {
+    font-size: 32px;
+    text-align: center;
+    color: #5a6f4f;
+    margin-bottom: 20px;
+    font-family: "Georgia", serif;
+    font-weight: normal;
+}
+
+.form-section {
+    text-align: left;
+    margin-bottom: 22px;
+}
+
+.profile-label {
+    color: #3a4a2f;
+    font-family: "Georgia", serif;
+    font-size: 20px;
+    display: block;
+    margin-bottom: 20px;
+}
+
+label[for="bio"],
+label[for="dateofbirth"] {
+    margin-bottom: 6px;
+}
+
+input[type="date"],
+textarea {
+    margin-bottom: 12px;
+}
+
+}
+
+.profile-picture {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-top: 8px;
+    margin-bottom: 20px;
+}
+
+/* This is testing adding my css */
+ /* Profile picture styling */
+        .profile-picture {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-top: 8px;
+            display: block;
+        }
+
+        /* Upload instruction text */
+        .upload-instruction {
+            color: #3a4a2f;
+            font-family: "Georgia", serif;
+            font-size: 20px;
+            margin: 10px 0;
+
+        }
