@@ -23,9 +23,10 @@
     </form>
 
 
-
     <h3>Post History</h3>
-
+    <th:block th:if="${mutualFollowBool}">
+        <p>We are following each other</p>
+    </th:block>
 <!--    <p th:each="post: ${userPosts}" th:text="${post.getContent()}"></p>-->
 
     </body>

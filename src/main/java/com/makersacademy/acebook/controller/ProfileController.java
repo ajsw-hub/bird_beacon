@@ -73,7 +73,8 @@ public class ProfileController {
             chosenUser = userRepository.findUserByUsername(userId);
         }
 
-        Boolean isFollowingBool;
+        Boolean isFollowingBool = false;
+        Boolean mutualFollowBool = false;
 
         if (chosenUser.isPresent()) {
             User user = (User) chosenUser.get();
@@ -86,15 +87,18 @@ public class ProfileController {
             }
 
             Optional<Follow> isFollowing = followRepository.findAllByFolloweridAndFollowingid(currentUser.getId(), user.getId());
+            Optional<Follow> mutualFollow = followRepository.findAllByFolloweridAndFollowingid(user.getId(), currentUser.getId());
             if (isFollowing.isPresent()) {
                  isFollowingBool = true;
-            } else {
-                 isFollowingBool = false;
+                 if (mutualFollow.isPresent()) {
+                     mutualFollowBool = true;
+                 }
             }
 
             ModelAndView theirAviary = new ModelAndView("their-aviary");
             theirAviary.addObject("user", user);
             theirAviary.addObject("isFollowingBool", isFollowingBool);
+            theirAviary.addObject("mutualFollowBool", mutualFollowBool);
 
             return theirAviary;
         } else {
