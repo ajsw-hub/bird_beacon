@@ -76,16 +76,16 @@
     Signed in as <span sec:authentication="principal.attributes['email']"></span>
 </div>
 
-<!-- Posts from posts db all user posts -->
 
+<!-- Posts from posts db all user posts -->
 <div class="posts-on-birdfeed" th:each="post: ${listOfPosts}">
-<!-- username for post -->
-    <p th:text="${post.username}"></p>
+
 <!-- profile pic for poster -->
     <img th:if="${post.profilepicture != null}"
          th:src="@{'/profileimg/' + ${post.profilepicture}}"
          class="post-profile-pic"/>
-<!--    <img th:src="@{'/profileimg/' + ${currentUser.profilepicture}}"/>-->
+    <!-- username for post -->
+    <p th:text="${post.username}"></p>
 <!-- If bird name is not null then post the bird name else return What is this bird-->
     <p th:text="${post.birdName != null ? post.birdName : 'What is this bird?'}"></p>
 <!-- Date of post -->
