@@ -23,7 +23,7 @@
             <label class="profile-label">Profile Picture</label>
 
             <!-- Profile picture aligned left -->
-            <img th:src="@{'/images/' + ${user.profilepicture}}"
+            <img th:src="@{'/profileimg/' + ${user.profilepicture}}"
                  alt="Profile picture"
                  class="profile-picture">
 
@@ -40,7 +40,7 @@
         <div class="form-section">
             <label for="bio" class="profile-label">Bio</label>
             <br>
-            <textarea th:field="*{bio}"
+            <textarea id="bio" th:field="*{bio}"
                       minlength="3"
                       maxlength="300"
                       rows="4"

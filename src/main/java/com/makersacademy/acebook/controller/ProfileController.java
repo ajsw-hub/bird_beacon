@@ -56,11 +56,12 @@ public class ProfileController {
     }
 
     @GetMapping("/my-aviary/edit-page")
-    public String showMyEditPage(Model model, HttpSession session) {
+    public ModelAndView showMyEditPage(Model model, HttpSession session) {
+        ModelAndView editPage = new ModelAndView("edit-page");
         String username = session.getAttribute("username").toString();
         User user = userRepository.findUserByUsername(username).get();
-        model.addAttribute("user", user);
-        return "edit-page";
+        editPage.addObject("user", user);
+        return editPage;
     }
 
     @PostMapping("/my-aviary/edit-page")
@@ -86,7 +87,7 @@ public class ProfileController {
             currentUser.setDateofbirth(formUser.getDateofbirth());
         }
 
-        Path uploadDir = Paths.get("images");
+        Path uploadDir = Paths.get("/profileimg");
         Files.createDirectories(uploadDir);
 
         if (!image.isEmpty()) {

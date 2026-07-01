@@ -16,7 +16,7 @@
     <button><a href="/my-aviary/edit-page">Edit</a></button>
 
         <h3 th:text="${user.username}"></h3>
-        <img width="300" th:src="@{'/images/' + ${user.profilepicture}}"
+        <img width="300" th:src="@{'/profileimg/' + ${user.profilepicture}}"
          class="user-img"
          alt="Nav Profile Picture" />
 
