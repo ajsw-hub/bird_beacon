@@ -15,6 +15,8 @@ public interface PostRepository extends CrudRepository<Post, Long> {
             p.id,
             p.content,
             p.posterId,
+            u.username,
+            u.profilepicture,
             p.latitude,
             p.longitude,
             p.birdId,
@@ -27,6 +29,7 @@ public interface PostRepository extends CrudRepository<Post, Long> {
             p.restricted
         )
         FROM Post p
+        JOIN User u ON p.posterId = u.id
         LEFT JOIN Bird b ON p.birdId = b.id
         WHERE p.enabled = TRUE
         AND p.restricted = FALSE

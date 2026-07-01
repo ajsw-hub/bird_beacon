@@ -25,8 +25,8 @@ public class BirdFeedController {
     @GetMapping("/birdfeed")
     public ModelAndView index(HttpSession session) {
         ModelAndView birdFeed = new ModelAndView("/birdfeed");
-        List<PostView> listOfPosts = postRepository.postsJoinBird();
 
+        List<PostView> listOfPosts = postRepository.postsJoinBird();
         String username = (String) session.getAttribute("username");
         User currentUser = userRepository.findUserByUsername(username)
                 .orElse(null);

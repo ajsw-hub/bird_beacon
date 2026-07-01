@@ -61,12 +61,20 @@
 }
 
 /* Map CSS */
-        .mini-map {
-            height: 100px;
-            width: 500px;
-            transition: all 0.3s ease;
-        }
-        .mini-map.expanded {
-            height: 300px;
-            width: 500px;
-        }
+.mini-map {
+    height: 100px;
+    width: 500px;
+    transition: all 0.3s ease;
+}
+.mini-map.expanded {
+    height: 300px;
+    width: 500px;
+}
+/* Profile pic */
+.post-profile-pic {
+ width: 48px;
+ height: 48px;
+ border-radius: 50%;
+ object-fit: cover;
+ border: 2px solid #ddd;
+}

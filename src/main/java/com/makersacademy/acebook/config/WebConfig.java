@@ -10,6 +10,8 @@ public class WebConfig implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/postimg/**")
                 .addResourceLocations("file:uploads/postimg/");
+        registry.addResourceHandler("/profileimg/**")
+                .addResourceLocations("file:uploads/profileimg/");
 
     }
 }

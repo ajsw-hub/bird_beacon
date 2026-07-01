@@ -14,6 +14,8 @@ public class PostView {
     private Long id;
     private String content;
     private Long posterId;
+    private String username;
+    private String profilepicture;
     private BigDecimal latitude;
     private BigDecimal longitude;
     private Long birdId;
@@ -29,6 +31,8 @@ public class PostView {
             Long id,
             String content,
             Long posterId,
+            String username,
+            String profilepicture,
             BigDecimal latitude,
             BigDecimal longitude,
             Long birdId,
@@ -44,6 +48,8 @@ public class PostView {
         this.id = id;
         this.content = content;
         this.posterId = posterId;
+        this.username = username;
+        this.profilepicture = profilepicture;
         this.latitude = latitude;
         this.longitude = longitude;
         this.birdId = birdId;
