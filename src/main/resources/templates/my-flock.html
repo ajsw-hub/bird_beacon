@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5" >
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+  <h1>My Flock</h1>
+<section>
+    <th:block th:each="user: ${myFlockUsers}">
+        <div class="flock-user-card">
+            <a th:href="@{/their-aviary/{userProfile} (userProfile = ${user.getId()})}">
+                <img src="https://images.pexels.com/photos/19822433/pexels-photo-19822433.jpeg" width=100>
+                <p th:text="${user.getUsername()}"></p>
+            </a>
+        </div>
+    </th:block>
+</section>
+
+</body>
+</html>
