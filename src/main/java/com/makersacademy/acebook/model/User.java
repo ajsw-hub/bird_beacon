@@ -3,6 +3,7 @@ package com.makersacademy.acebook.model;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 
@@ -12,7 +13,6 @@ import static java.lang.Boolean.TRUE;
 @Table(name = "users")
 @NoArgsConstructor
 @Data
-
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,20 +23,19 @@ public class User {
 
     private String profilepicture;
     private String bio;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate dateofbirth;
-
-
 
     public User(String usenname) {
         this.username = username;
         this.enabled = TRUE;
-
     }
+
     public User(String username, String email) {
         this.username = username;
         this.email = email;
         this.enabled = TRUE;
         this.profilepicture = "default-profile-pic.jpg";
-
     }
 }

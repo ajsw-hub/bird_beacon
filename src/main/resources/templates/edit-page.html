@@ -2,46 +2,87 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="/main.css">
     <title>Edit Profile</title>
+
+    <style>
+        /* Profile picture styling */
+        .profile-picture {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-top: 8px;
+            display: block;
+        }
+
+        /* Upload instruction text */
+        .upload-instruction {
+            color: #3a4a2f;
+            font-family: "Georgia", serif;
+            font-size: 20px;
+            margin: 10px 0;
+
+        }
+    </style>
 </head>
+
 <body>
 
-<h1>Edit Your Profile</h1>
+<div class="page-container">
 
-<form th:action="@{/profile/edit-page}"
-      th:object="${user}"
-      method="post"
-      enctype="multipart/form-data">
+    <h1 class="page-title">Edit Your Profile</h1>
 
-    <label for="profilepicture">Profile Picture</label><br>
+    <form th:action="@{/profile/edit-page}"
+          th:object="${user}"
+          method="post"
+          enctype="multipart/form-data">
 
-    <img th:src="@{'/images/' + ${user.profilepicture}}"
-         alt="Profile picture"
-         style="width:120px; height:120px; object-fit:cover; border-radius:8px;"/>
+        <!-- Profile Picture Section -->
+        <div class="form-section">
+            <label class="profile-label">Profile Picture</label>
 
-    <br><br>
+            <!-- Profile picture aligned left -->
+            <img th:src="@{'/images/' + ${user.profilepicture}}"
+                 alt="Profile picture"
+                 class="profile-picture">
 
-    <div class="form-field">
-        <label for="profile-picture-input">Upload a profile picture</label>
-        <input id="profile-picture-input" class="input" type="file" name="imageFile"
-               accept="image/png, image/jpeg, image/jpg"/>
-    </div>
+            <!-- Instruction above file input -->
+            <p class="upload-instruction">Choose a file to upload a new picture</p>
 
-    <br><br>
+            <input id="profile-picture-input"
+                   type="file"
+                   name="imageFile"
+                   accept="image/png, image/jpeg, image/jpg">
+        </div>
 
-    <label for="bio">Bio</label><br>
-    <textarea id="bio" name="bio" rows="4" cols="50"
-              th:field="*{bio}"></textarea>
-    <br><br>
+        <!-- Bio Section -->
+        <div class="form-section">
+            <label for="bio" class="profile-label">Bio</label>
+            <br>
+            <textarea th:field="*{bio}"
+                      minlength="3"
+                      maxlength="300"
+                      rows="4"
+                      cols="50"></textarea>
+        </div>
 
-    <label for="dateofbirth">Date of Birth</label><br><br>
-    <input type="date" id="dateofbirth" name="dateofbirth"
-           th:field="*{dateofbirth}">
-    <br><br>
+        <!-- Date of Birth Section -->
+        <div class="form-section">
+            <label for="dateofbirth" class="profile-label">Date of Birth</label>
+            <br>
+            <input type="date"
+                   id="dateofbirth"
+                   name="dateofbirth"
+                   th:field="*{dateofbirth}"
+                   max="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}" />
+        </div>
 
-    <input type="submit" value="Save Changes">
+        <input type="submit" value="Save Changes">
 
-</form>
+    </form>
+
+</div>
 
 </body>
 </html>

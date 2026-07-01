@@ -24,6 +24,8 @@
 
         <h3>Post History</h3>
 
+    <p th:each="post: ${userPosts}" th:text="${post.getContent()}"></p>
+
     <p> Bio:
             <br><br>
             <span th:text="${user.bio}"></span>
@@ -32,9 +34,6 @@
 <!--            <br><br>-->
 <!--            <span th:text="${user.dateofbirth}"></span>-->
             </p>
-
-
-        <p th:each="post: ${userPosts}" th:text="${post.getContent()}"></p>
 
     </body>
 

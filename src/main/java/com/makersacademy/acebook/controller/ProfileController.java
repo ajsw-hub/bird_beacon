@@ -1,5 +1,6 @@
 package com.makersacademy.acebook.controller;
 
+import java.time.LocalDate;
 import org.springframework.ui.Model;
 import com.makersacademy.acebook.model.Post;
 import com.makersacademy.acebook.model.User;
@@ -34,10 +35,8 @@ public class ProfileController {
 
     @GetMapping("/profile")
     public ModelAndView showMyPostHistory(HttpSession session) {
-
         String username = session.getAttribute("username").toString();
         User user = userRepository.findUserByUsername(username).get();
-
         List<Post> userPosts = postRepository.findByPosteridOrderByIdDesc(user.getId());
 
         ModelAndView modelAndView = new ModelAndView("/profile");
@@ -49,12 +48,9 @@ public class ProfileController {
 
     @GetMapping("/profile/edit-page")
     public String showMyEditPage(Model model, HttpSession session) {
-
         String username = session.getAttribute("username").toString();
         User user = userRepository.findUserByUsername(username).get();
-
         model.addAttribute("user", user);
-
         return "edit-page";
     }
 
@@ -66,13 +62,35 @@ public class ProfileController {
         String username = session.getAttribute("username").toString();
         User currentUser = userRepository.findUserByUsername(username).get();
 
+        if (formUser.getBio() != null && formUser.getBio().length() > 300) {
+            return new RedirectView("/profile/edit-page?error=bioLength");
+        }
+
+        if (formUser.getDateofbirth() != null &&
+                formUser.getDateofbirth().isAfter(LocalDate.now())) {
+            return new RedirectView("/profile/edit-page?error=dob");
+        }
+
         currentUser.setBio(formUser.getBio());
-        currentUser.setDateofbirth(formUser.getDateofbirth());
+
+        if (formUser.getDateofbirth() != null) {
+            currentUser.setDateofbirth(formUser.getDateofbirth());
+        }
 
         Path uploadDir = Paths.get("images");
         Files.createDirectories(uploadDir);
 
         if (!image.isEmpty()) {
+            String contentType = image.getContentType();
+
+            if (contentType == null ||
+                    (!contentType.equals("image/png") &&
+                            !contentType.equals("image/jpeg") &&
+                            !contentType.equals("image/jpg"))) {
+
+                return new RedirectView("/profile/edit-page?error=invalidImage");
+            }
+
             String filename = System.currentTimeMillis() + "_" + image.getOriginalFilename();
             Path filePath = uploadDir.resolve(filename);
 
@@ -86,7 +104,6 @@ public class ProfileController {
         }
 
         userRepository.save(currentUser);
-
         session.setAttribute("user", currentUser);
 
         return new RedirectView("/profile");
